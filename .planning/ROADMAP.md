@@ -31,11 +31,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Connection test button on settings page reports success or a specific error message when clicked
   4. AWS credentials are read from wp-config.php constants and never stored in the database
   5. Settings page rejects invalid input (empty credentials, malformed bucket names) with clear validation errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Plugin scaffold, autoloader, and AWS SDK bundling
-- [ ] 01-02: Settings page, credential management, and connection testing
+- [ ] 01-01-PLAN.md — Plugin bootstrap, autoloader, AWS SDK bundling, and S3 client wrapper
+- [ ] 01-02-PLAN.md — Settings page, credential display, connection test, and input validation
 
 ### Phase 2: S3 Upload Pipeline
 **Goal**: New media uploads automatically appear on S3 with all thumbnail sizes, correct MIME types, and proper cache headers
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Settings | 0/2 | Not started | - |
+| 1. Foundation and Settings | 0/2 | Planned | - |
 | 2. S3 Upload Pipeline | 0/3 | Not started | - |
 | 3. URL Rewriting and CloudFront | 0/2 | Not started | - |
 | 4. Deletion Sync | 0/1 | Not started | - |
