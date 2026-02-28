@@ -47,12 +47,11 @@ Plans:
   3. Failed S3 uploads are logged with error details and the local file remains intact in WordPress
   4. Attachment postmeta tracks S3 offload status, key, and timestamp for each uploaded file
   5. S3 objects are accessible through CloudFront OAC without public bucket ACLs
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: S3 client wrapper with upload, delete, and URL generation
-- [ ] 02-02: Upload handler hooking wp_generate_attachment_metadata
-- [ ] 02-03: Attachment tracker and error handling
+- [ ] 02-01-PLAN.md — S3 client upload/delete methods and attachment offload tracker
+- [ ] 02-02-PLAN.md — Upload handler with WordPress hook integration and bootstrap modification
 
 ### Phase 3: URL Rewriting and CloudFront
 **Goal**: All media URLs across the site resolve to CloudFront CDN paths at render time, with zero database modifications
@@ -122,7 +121,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation and Settings | 2/2 | Complete | 2026-02-27 |
-| 2. S3 Upload Pipeline | 0/3 | Not started | - |
+| 2. S3 Upload Pipeline | 0/2 | Planning complete | - |
 | 3. URL Rewriting and CloudFront | 0/2 | Not started | - |
 | 4. Deletion Sync | 0/1 | Not started | - |
 | 5. Bulk Migration | 0/2 | Not started | - |
@@ -130,5 +129,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 *Roadmap created: 2026-02-27*
-*Depth: comprehensive (6 phases, 12 plans)*
+*Depth: comprehensive (6 phases, 11 plans)*
 *Coverage: 46/46 v1 requirements mapped*
