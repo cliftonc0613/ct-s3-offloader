@@ -12,7 +12,7 @@ This roadmap delivers a WordPress plugin that transparently offloads media uploa
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation and Settings** - Plugin skeleton, AWS SDK integration, settings page, and credential management
+- [x] **Phase 1: Foundation and Settings** - Plugin skeleton, AWS SDK integration, settings page, and credential management
 - [ ] **Phase 2: S3 Upload Pipeline** - Automatic upload of media files and thumbnails to S3 on WordPress upload
 - [ ] **Phase 3: URL Rewriting and CloudFront** - Runtime URL replacement from local paths to CloudFront CDN URLs
 - [ ] **Phase 4: Deletion Sync** - S3 object cleanup when media is deleted from WordPress
@@ -34,8 +34,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Plugin bootstrap, autoloader, AWS SDK bundling, and S3 client wrapper
-- [ ] 01-02-PLAN.md — Settings page, credential display, connection test, and input validation
+- [x] 01-01-PLAN.md — Plugin bootstrap, autoloader, AWS SDK bundling, and S3 client wrapper
+- [x] 01-02-PLAN.md — Settings page, credential display, connection test, and input validation
 
 ### Phase 2: S3 Upload Pipeline
 **Goal**: New media uploads automatically appear on S3 with all thumbnail sizes, correct MIME types, and proper cache headers
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Settings | 0/2 | Planned | - |
+| 1. Foundation and Settings | 2/2 | Complete | 2026-02-27 |
 | 2. S3 Upload Pipeline | 0/3 | Not started | - |
 | 3. URL Rewriting and CloudFront | 0/2 | Not started | - |
 | 4. Deletion Sync | 0/1 | Not started | - |
