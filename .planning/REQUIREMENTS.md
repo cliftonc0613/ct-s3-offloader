@@ -114,58 +114,58 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | — | Pending |
-| FOUND-02 | — | Pending |
-| FOUND-03 | — | Pending |
-| FOUND-04 | — | Pending |
-| FOUND-05 | — | Pending |
-| FOUND-06 | — | Pending |
-| FOUND-07 | — | Pending |
-| UPLD-01 | — | Pending |
-| UPLD-02 | — | Pending |
-| UPLD-03 | — | Pending |
-| UPLD-04 | — | Pending |
-| UPLD-05 | — | Pending |
-| UPLD-06 | — | Pending |
-| UPLD-07 | — | Pending |
-| URL-01 | — | Pending |
-| URL-02 | — | Pending |
-| URL-03 | — | Pending |
-| URL-04 | — | Pending |
-| URL-05 | — | Pending |
-| URL-06 | — | Pending |
-| URL-07 | — | Pending |
-| DEL-01 | — | Pending |
-| DEL-02 | — | Pending |
-| DEL-03 | — | Pending |
-| DEL-04 | — | Pending |
-| MIG-01 | — | Pending |
-| MIG-02 | — | Pending |
-| MIG-03 | — | Pending |
-| MIG-04 | — | Pending |
-| MIG-05 | — | Pending |
-| MIG-06 | — | Pending |
-| MIG-07 | — | Pending |
-| MIG-08 | — | Pending |
-| UI-01 | — | Pending |
-| UI-02 | — | Pending |
-| UI-03 | — | Pending |
-| UI-04 | — | Pending |
-| UI-05 | — | Pending |
-| CDN-01 | — | Pending |
-| CDN-02 | — | Pending |
-| CDN-03 | — | Pending |
-| CDN-04 | — | Pending |
-| SEC-01 | — | Pending |
-| SEC-02 | — | Pending |
-| SEC-03 | — | Pending |
-| SEC-04 | — | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Pending |
+| UPLD-01 | Phase 2 | Pending |
+| UPLD-02 | Phase 2 | Pending |
+| UPLD-03 | Phase 2 | Pending |
+| UPLD-04 | Phase 2 | Pending |
+| UPLD-05 | Phase 2 | Pending |
+| UPLD-06 | Phase 2 | Pending |
+| UPLD-07 | Phase 2 | Pending |
+| URL-01 | Phase 3 | Pending |
+| URL-02 | Phase 3 | Pending |
+| URL-03 | Phase 3 | Pending |
+| URL-04 | Phase 3 | Pending |
+| URL-05 | Phase 3 | Pending |
+| URL-06 | Phase 3 | Pending |
+| URL-07 | Phase 3 | Pending |
+| DEL-01 | Phase 4 | Pending |
+| DEL-02 | Phase 4 | Pending |
+| DEL-03 | Phase 4 | Pending |
+| DEL-04 | Phase 4 | Pending |
+| MIG-01 | Phase 5 | Pending |
+| MIG-02 | Phase 5 | Pending |
+| MIG-03 | Phase 5 | Pending |
+| MIG-04 | Phase 5 | Pending |
+| MIG-05 | Phase 5 | Pending |
+| MIG-06 | Phase 5 | Pending |
+| MIG-07 | Phase 5 | Pending |
+| MIG-08 | Phase 5 | Pending |
+| UI-01 | Phase 1 | Pending |
+| UI-02 | Phase 6 | Pending |
+| UI-03 | Phase 6 | Pending |
+| UI-04 | Phase 6 | Pending |
+| UI-05 | Phase 6 | Pending |
+| CDN-01 | Phase 3 | Pending |
+| CDN-02 | Phase 2 | Pending |
+| CDN-03 | Phase 3 | Pending |
+| CDN-04 | Phase 2 | Pending |
+| SEC-01 | Phase 1 | Pending |
+| SEC-02 | Phase 1 | Pending |
+| SEC-03 | Phase 1 | Pending |
+| SEC-04 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 43 total
-- Mapped to phases: 0
-- Unmapped: 43 ⚠️
+- v1 requirements: 46 total
+- Mapped to phases: 46
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-27*
-*Last updated: 2026-02-27 after initial definition*
+*Last updated: 2026-02-27 after roadmap creation*
