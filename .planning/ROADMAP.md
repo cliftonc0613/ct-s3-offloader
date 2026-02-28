@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: S3 Upload Pipeline** - Automatic upload of media files and thumbnails to S3 on WordPress upload
 - [x] **Phase 3: URL Rewriting and CloudFront** - Runtime URL replacement from local paths to CloudFront CDN URLs
 - [x] **Phase 4: Deletion Sync** - S3 object cleanup when media is deleted from WordPress
-- [ ] **Phase 5: Bulk Migration** - WP-CLI commands for migrating existing media libraries to S3
+- [x] **Phase 5: Bulk Migration** - WP-CLI commands for migrating existing media libraries to S3
 - [ ] **Phase 6: Admin UI and Finalization** - Media Library status indicators, storage stats, and uninstall cleanup
 
 ## Phase Details
@@ -95,8 +95,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Bulk migrator engine and WP-CLI offload command with batching, retry, dry-run, and progress output
-- [ ] 05-02-PLAN.md — Status and reset subcommands with summary counts, verbose tables, and metadata cleanup
+- [x] 05-01-PLAN.md — Bulk migrator engine and WP-CLI offload command with batching, retry, dry-run, and progress output
+- [x] 05-02-PLAN.md — Status and reset subcommands with summary counts, verbose tables, and metadata cleanup
 
 ### Phase 6: Admin UI and Finalization
 **Goal**: Media Library provides visual offload status per file, settings page shows storage statistics, and plugin cleans up on uninstall
@@ -124,7 +124,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. S3 Upload Pipeline | 2/2 | Complete | 2026-02-28 |
 | 3. URL Rewriting and CloudFront | 2/2 | Complete | 2026-02-28 |
 | 4. Deletion Sync | 1/1 | Complete | 2026-02-28 |
-| 5. Bulk Migration | 0/2 | Not started | - |
+| 5. Bulk Migration | 2/2 | Complete | 2026-02-28 |
 | 6. Admin UI and Finalization | 0/2 | Not started | - |
 
 ---

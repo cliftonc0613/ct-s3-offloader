@@ -46,14 +46,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Migration
 
-- [ ] **MIG-01**: WP-CLI command uploads all existing media library files to S3
-- [ ] **MIG-02**: Migration processes files in configurable batch sizes to manage memory
-- [ ] **MIG-03**: Progress bar displays during migration with file count and percentage
-- [ ] **MIG-04**: Migration can resume from where it stopped on failure (per-file tracking)
-- [ ] **MIG-05**: Dry-run mode shows what would be uploaded without making changes
-- [ ] **MIG-06**: Migration skips files already uploaded to S3 (idempotent)
-- [ ] **MIG-07**: Memory cleanup between batches prevents exhaustion on 1000+ file libraries
-- [ ] **MIG-08**: Migration summary report shows success/failure/skipped counts
+- [x] **MIG-01**: WP-CLI command uploads all existing media library files to S3
+- [x] **MIG-02**: Migration processes files in configurable batch sizes to manage memory
+- [x] **MIG-03**: Progress bar displays during migration with file count and percentage
+- [x] **MIG-04**: Migration can resume from where it stopped on failure (per-file tracking)
+- [x] **MIG-05**: Dry-run mode shows what would be uploaded without making changes
+- [x] **MIG-06**: Migration skips files already uploaded to S3 (idempotent)
+- [x] **MIG-07**: Memory cleanup between batches prevents exhaustion on 1000+ file libraries
+- [x] **MIG-08**: Migration summary report shows success/failure/skipped counts
 
 ### Admin UI
 
@@ -139,14 +139,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEL-02 | Phase 4 | Complete |
 | DEL-03 | Phase 4 | Complete |
 | DEL-04 | Phase 4 | Complete |
-| MIG-01 | Phase 5 | Pending |
-| MIG-02 | Phase 5 | Pending |
-| MIG-03 | Phase 5 | Pending |
-| MIG-04 | Phase 5 | Pending |
-| MIG-05 | Phase 5 | Pending |
-| MIG-06 | Phase 5 | Pending |
-| MIG-07 | Phase 5 | Pending |
-| MIG-08 | Phase 5 | Pending |
+| MIG-01 | Phase 5 | Complete |
+| MIG-02 | Phase 5 | Complete |
+| MIG-03 | Phase 5 | Complete |
+| MIG-04 | Phase 5 | Complete |
+| MIG-05 | Phase 5 | Complete |
+| MIG-06 | Phase 5 | Complete |
+| MIG-07 | Phase 5 | Complete |
+| MIG-08 | Phase 5 | Complete |
 | UI-01 | Phase 1 | Complete |
 | UI-02 | Phase 6 | Pending |
 | UI-03 | Phase 6 | Pending |
@@ -168,4 +168,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-27*
-*Last updated: 2026-02-28 after Phase 4 completion*
+*Last updated: 2026-02-28 after Phase 5 completion*
