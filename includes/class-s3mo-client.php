@@ -11,6 +11,7 @@
 defined('ABSPATH') || exit;
 
 use Aws\S3\S3Client;
+use Aws\S3\ObjectUploader;
 use Aws\Exception\AwsException;
 
 class S3MO_Client {
@@ -101,5 +102,97 @@ class S3MO_Client {
         }
 
         return "https://{$this->bucket}.s3.{$this->region}.amazonaws.com";
+    }
+
+    /**
+     * Upload a file to S3 using ObjectUploader for automatic multipart handling.
+     *
+     * ACL is set to 'private' — CloudFront OAC handles public access (CDN-04).
+     * CacheControl is set for long-lived immutable caching (CDN-02).
+     *
+     * @param string $key          The S3 object key (path within the bucket).
+     * @param string $file_path    Absolute path to the local file.
+     * @param string $content_type MIME type for the Content-Type header.
+     *
+     * @return array{success: bool, key: string, url?: string, error?: string}
+     */
+    public function upload_object(string $key, string $file_path, string $content_type): array {
+        $body = fopen($file_path, 'rb');
+
+        if ($body === false) {
+            throw new \RuntimeException("Cannot open file for reading: {$file_path}");
+        }
+
+        try {
+            $uploader = new ObjectUploader(
+                $this->s3,
+                $this->bucket,
+                $key,
+                $body,
+                'private',
+                [
+                    'params' => [
+                        'ContentType'  => $content_type,
+                        'CacheControl' => 'public, max-age=31536000, immutable',
+                    ],
+                ]
+            );
+
+            $uploader->upload();
+
+            return [
+                'success' => true,
+                'key'     => $key,
+                'url'     => $this->get_object_url($key),
+            ];
+        } catch (AwsException $e) {
+            return [
+                'success' => false,
+                'key'     => $key,
+                'error'   => $e->getAwsErrorMessage() ?? $e->getMessage(),
+            ];
+        } finally {
+            fclose($body);
+        }
+    }
+
+    /**
+     * Delete an object from S3 by key.
+     *
+     * @param string $key The S3 object key to delete.
+     *
+     * @return array{success: bool, key: string, error?: string}
+     */
+    public function delete_object(string $key): array {
+        try {
+            $this->s3->deleteObject([
+                'Bucket' => $this->bucket,
+                'Key'    => $key,
+            ]);
+
+            return [
+                'success' => true,
+                'key'     => $key,
+            ];
+        } catch (AwsException $e) {
+            return [
+                'success' => false,
+                'key'     => $key,
+                'error'   => $e->getAwsErrorMessage() ?? $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Generate the public URL for an S3 object key.
+     *
+     * Delegates to get_url_base() which prefers CloudFront when configured.
+     *
+     * @param string $key The S3 object key.
+     *
+     * @return string Full URL to the object.
+     */
+    public function get_object_url(string $key): string {
+        return $this->get_url_base() . '/' . ltrim($key, '/');
     }
 }
