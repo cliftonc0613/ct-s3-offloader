@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-27)
 ## Current Position
 
 Phase: 3 of 6 (URL Rewriting and CloudFront)
-Plan: Not yet planned
-Status: Ready for planning
-Last activity: 2026-02-28 — Completed Phase 2 (S3 Upload Pipeline)
+Plan: 1 of 2
+Status: In progress
+Last activity: 2026-02-28 — Completed 03-01-PLAN.md
 
-Progress: [███░░░░░░░] 33%
+Progress: [████░░░░░░] 42%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: ~2m 20s
-- Total execution time: ~9 minutes
+- Total plans completed: 5
+- Average duration: ~2m 15s
+- Total execution time: ~11 minutes
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [███░░░░░░░] 33%
 |-------|-------|-------|----------|
 | 1 - Foundation | 2/2 | ~5m | ~2m 30s |
 | 2 - S3 Upload Pipeline | 2/2 | ~4m | ~2m |
+| 3 - URL Rewriting | 1/2 | ~2m | ~2m |
 
 **Recent Trend:**
-- Last 5 plans: 01-01, 01-02, 02-01, 02-02
+- Last 5 plans: 01-02, 02-01, 02-02, 03-01
 - Trend: Consistent execution speed
 
 *Updated after each plan completion*
@@ -52,6 +53,8 @@ Recent decisions affecting current work:
 - S3MO_Tracker uses static methods with _s3mo_ prefixed postmeta keys
 - Upload handler registered outside is_admin() for REST API support
 - Only mark offloaded when ALL files (original + thumbnails) succeed
+- str_replace over regex for content URL filtering (simpler, faster, sufficient)
+- URL rewriter wired outside is_admin() for frontend + REST API + admin contexts
 
 ### Pending Todos
 
@@ -61,10 +64,11 @@ None yet.
 
 - SDK namespace conflict resolved: using class_exists('Aws\Sdk') guard (decided in 01-01)
 - AWS SDK zip size (~7MB extracted) — acceptable for private distribution
-- Headless/REST API URL rewriting needed in Phase 3 for Next.js frontend
+- Headless/REST API URL rewriting partially addressed (the_content filter covers content.rendered)
+- Full REST API srcset/thumbnail rewriting needed in 03-02
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed Phase 2 (S3 Upload Pipeline)
-Resume: Plan Phase 3 with /gsd:plan-phase 3
+Stopped at: Completed 03-01-PLAN.md
+Resume: Execute 03-02-PLAN.md (srcset and REST API filters)
