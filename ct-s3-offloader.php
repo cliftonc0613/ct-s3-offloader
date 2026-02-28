@@ -89,6 +89,9 @@ add_action('plugins_loaded', function (): void {
         $url_rewriter = new S3MO_URL_Rewriter($client);
         $url_rewriter->register_hooks();
 
+        $delete_handler = new S3MO_Delete_Handler($client);
+        $delete_handler->register_hooks();
+
         if (is_admin()) {
             $settings = new S3MO_Settings_Page($client);
             $settings->register_hooks();
