@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-27)
 ## Current Position
 
 Phase: 4 of 6 (Deletion Sync)
-Plan: Not yet planned
-Status: Ready for planning
-Last activity: 2026-02-28 — Completed Phase 3 (URL Rewriting and CloudFront)
+Plan: 1 of 1 complete
+Status: Phase complete
+Last activity: 2026-02-28 — Completed 04-01-PLAN.md (S3 Deletion Handler)
 
-Progress: [█████░░░░░] 50%
+Progress: [███████░░░] 58%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: ~2m 10s
-- Total execution time: ~13 minutes
+- Total plans completed: 7
+- Average duration: ~2m
+- Total execution time: ~15 minutes
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [█████░░░░░] 50%
 | 1 - Foundation | 2/2 | ~5m | ~2m 30s |
 | 2 - S3 Upload Pipeline | 2/2 | ~4m | ~2m |
 | 3 - URL Rewriting | 2/2 | ~4m | ~2m |
+| 4 - Deletion Sync | 1/1 | ~1m 30s | ~1m 30s |
 
 **Recent Trend:**
-- Last 5 plans: 02-01, 02-02, 03-01, 03-02
-- Trend: Consistent execution speed
+- Last 5 plans: 02-02, 03-01, 03-02, 04-01
+- Trend: Consistent execution speed, single-plan phases fastest
 
 *Updated after each plan completion*
 
@@ -57,6 +58,9 @@ Recent decisions affecting current work:
 - URL rewriter wired outside is_admin() for frontend + REST API + admin contexts
 - Explicit origin allowlist for CORS (no wildcard), includes site URL + localhost dev ports + CDN URL
 - REST API source_url uses get_object_url for canonical URL; sizes use bulk str_replace
+- Delete handler outside is_admin() for REST API and WP-CLI deletion support
+- Failed S3 deletions logged but never thrown (DEL-04)
+- Tracker cleared AFTER S3 deletions to preserve key access
 
 ### Pending Todos
 
@@ -71,5 +75,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed Phase 3 (URL Rewriting and CloudFront)
-Resume: Plan Phase 4 with /gsd:plan-phase 4
+Stopped at: Completed 04-01-PLAN.md (S3 Deletion Handler)
+Resume: Plan Phase 5 with /gsd:plan-phase 5
