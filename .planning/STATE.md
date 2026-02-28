@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-27)
 
 **Core value:** Media files upload to S3 and serve from CloudFront transparently
-**Current focus:** Phase 4 - Deletion Sync
+**Current focus:** Phase 5 - Bulk Migration
 
 ## Current Position
 

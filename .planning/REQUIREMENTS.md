@@ -39,10 +39,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deletion
 
-- [ ] **DEL-01**: Deleting media from WordPress also deletes the original file from S3
-- [ ] **DEL-02**: All thumbnail sizes for deleted media removed from S3
-- [ ] **DEL-03**: Deletion hooks fire before WordPress removes metadata so S3 keys can be read
-- [ ] **DEL-04**: Failed S3 deletions logged but do not block WordPress deletion
+- [x] **DEL-01**: Deleting media from WordPress also deletes the original file from S3
+- [x] **DEL-02**: All thumbnail sizes for deleted media removed from S3
+- [x] **DEL-03**: Deletion hooks fire before WordPress removes metadata so S3 keys can be read
+- [x] **DEL-04**: Failed S3 deletions logged but do not block WordPress deletion
 
 ### Migration
 
@@ -135,10 +135,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | URL-05 | Phase 3 | Complete |
 | URL-06 | Phase 3 | Complete |
 | URL-07 | Phase 3 | Complete |
-| DEL-01 | Phase 4 | Pending |
-| DEL-02 | Phase 4 | Pending |
-| DEL-03 | Phase 4 | Pending |
-| DEL-04 | Phase 4 | Pending |
+| DEL-01 | Phase 4 | Complete |
+| DEL-02 | Phase 4 | Complete |
+| DEL-03 | Phase 4 | Complete |
+| DEL-04 | Phase 4 | Complete |
 | MIG-01 | Phase 5 | Pending |
 | MIG-02 | Phase 5 | Pending |
 | MIG-03 | Phase 5 | Pending |
@@ -168,4 +168,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-27*
-*Last updated: 2026-02-28 after Phase 3 completion*
+*Last updated: 2026-02-28 after Phase 4 completion*
