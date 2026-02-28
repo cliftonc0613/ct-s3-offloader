@@ -128,13 +128,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UPLD-05 | Phase 2 | Complete |
 | UPLD-06 | Phase 2 | Complete |
 | UPLD-07 | Phase 2 | Complete |
-| URL-01 | Phase 3 | Pending |
-| URL-02 | Phase 3 | Pending |
-| URL-03 | Phase 3 | Pending |
-| URL-04 | Phase 3 | Pending |
-| URL-05 | Phase 3 | Pending |
-| URL-06 | Phase 3 | Pending |
-| URL-07 | Phase 3 | Pending |
+| URL-01 | Phase 3 | Complete |
+| URL-02 | Phase 3 | Complete |
+| URL-03 | Phase 3 | Complete |
+| URL-04 | Phase 3 | Complete |
+| URL-05 | Phase 3 | Complete |
+| URL-06 | Phase 3 | Complete |
+| URL-07 | Phase 3 | Complete |
 | DEL-01 | Phase 4 | Pending |
 | DEL-02 | Phase 4 | Pending |
 | DEL-03 | Phase 4 | Pending |
@@ -152,9 +152,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-03 | Phase 6 | Pending |
 | UI-04 | Phase 6 | Pending |
 | UI-05 | Phase 6 | Pending |
-| CDN-01 | Phase 3 | Pending |
+| CDN-01 | Phase 3 | Complete |
 | CDN-02 | Phase 2 | Complete |
-| CDN-03 | Phase 3 | Pending |
+| CDN-03 | Phase 3 | Complete |
 | CDN-04 | Phase 2 | Complete |
 | SEC-01 | Phase 1 | Complete |
 | SEC-02 | Phase 1 | Complete |
@@ -168,4 +168,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-27*
-*Last updated: 2026-02-28 after Phase 2 completion*
+*Last updated: 2026-02-28 after Phase 3 completion*
