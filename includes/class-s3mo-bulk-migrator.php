@@ -239,6 +239,198 @@ class S3MO_Bulk_Migrator {
     }
 
     /**
+     * Get summary counts of offloaded, pending, and total attachments.
+     *
+     * @param string|null $mime_type Optional MIME type filter (e.g. 'image/jpeg').
+     *
+     * @return array{total: int, offloaded: int, pending: int}
+     */
+    public function get_status_counts(?string $mime_type = null): array {
+        // Total attachments.
+        $total_args = [
+            'post_type'      => 'attachment',
+            'post_status'    => 'inherit',
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+            'posts_per_page' => -1,
+        ];
+
+        if ($mime_type !== null) {
+            $total_args['post_mime_type'] = $mime_type;
+        }
+
+        $total_query = new \WP_Query($total_args);
+        $total       = count($total_query->posts);
+
+        // Offloaded attachments.
+        $offloaded_args = $total_args;
+        $offloaded_args['meta_query'] = [
+            [
+                'key'     => '_s3mo_offloaded',
+                'value'   => '1',
+                'compare' => '=',
+            ],
+        ];
+
+        $offloaded_query = new \WP_Query($offloaded_args);
+        $offloaded       = count($offloaded_query->posts);
+
+        return [
+            'total'     => $total,
+            'offloaded' => $offloaded,
+            'pending'   => $total - $offloaded,
+        ];
+    }
+
+    /**
+     * Get per-file status for all attachments.
+     *
+     * Returns an array of status rows with ID, Filename, MIME, Status, and
+     * S3 Key for each attachment. Processes in batches of 100 with memory
+     * cleanup between batches.
+     *
+     * @param string|null $mime_type Optional MIME type filter.
+     *
+     * @return array<int, array{ID: int, Filename: string, MIME: string, Status: string, 'S3 Key': string}>
+     */
+    public function get_all_attachment_statuses(?string $mime_type = null): array {
+        $args = [
+            'post_type'      => 'attachment',
+            'post_status'    => 'inherit',
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+            'posts_per_page' => -1,
+            'orderby'        => 'ID',
+            'order'          => 'ASC',
+        ];
+
+        if ($mime_type !== null) {
+            $args['post_mime_type'] = $mime_type;
+        }
+
+        $query = new \WP_Query($args);
+        $ids   = array_map('intval', $query->posts);
+
+        $statuses = [];
+        $count    = 0;
+
+        foreach ($ids as $attachment_id) {
+            $metadata  = wp_get_attachment_metadata($attachment_id);
+            $filename  = ! empty($metadata['file']) ? basename($metadata['file']) : '(no file)';
+            $mime      = (string) get_post_mime_type($attachment_id);
+            $offloaded = S3MO_Tracker::is_offloaded($attachment_id);
+            $s3_key    = $offloaded ? S3MO_Tracker::get_s3_key($attachment_id) : '';
+
+            $statuses[] = [
+                'ID'     => $attachment_id,
+                'Filename' => $filename,
+                'MIME'   => $mime,
+                'Status' => $offloaded ? 'offloaded' : 'pending',
+                'S3 Key' => $s3_key,
+            ];
+
+            $count++;
+
+            if ($count % 100 === 0) {
+                $this->cleanup_memory();
+            }
+        }
+
+        return $statuses;
+    }
+
+    /**
+     * Reset offload tracking metadata for attachments.
+     *
+     * Clears the S3MO_Tracker metadata for all offloaded attachments. When
+     * $delete_remote is true, deletes S3 objects (original + thumbnails)
+     * before clearing metadata.
+     *
+     * @param string|null $mime_type      Optional MIME type filter.
+     * @param bool        $delete_remote  When true, delete S3 objects before clearing metadata.
+     *
+     * @return array{cleared: int, deleted: int, delete_errors: int}
+     */
+    public function reset_tracking(?string $mime_type = null, bool $delete_remote = false): array {
+        // Query offloaded attachments.
+        $args = [
+            'post_type'      => 'attachment',
+            'post_status'    => 'inherit',
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+            'posts_per_page' => -1,
+            'orderby'        => 'ID',
+            'order'          => 'ASC',
+            'meta_query'     => [
+                [
+                    'key'     => '_s3mo_offloaded',
+                    'value'   => '1',
+                    'compare' => '=',
+                ],
+            ],
+        ];
+
+        if ($mime_type !== null) {
+            $args['post_mime_type'] = $mime_type;
+        }
+
+        $query = new \WP_Query($args);
+        $ids   = array_map('intval', $query->posts);
+
+        $cleared       = 0;
+        $deleted       = 0;
+        $delete_errors = 0;
+        $count         = 0;
+
+        foreach ($ids as $attachment_id) {
+            // Delete remote S3 objects if requested.
+            if ($delete_remote) {
+                $files = $this->build_file_key_list($attachment_id);
+
+                // Fall back to tracker key if metadata is missing.
+                if (empty($files)) {
+                    $tracker_key = S3MO_Tracker::get_s3_key($attachment_id);
+
+                    if (! empty($tracker_key)) {
+                        $result = $this->client->delete_object($tracker_key);
+
+                        if ($result['success']) {
+                            $deleted++;
+                        } else {
+                            $delete_errors++;
+                        }
+                    }
+                } else {
+                    foreach ($files as $file) {
+                        $result = $this->client->delete_object($file['key']);
+
+                        if ($result['success']) {
+                            $deleted++;
+                        } else {
+                            $delete_errors++;
+                        }
+                    }
+                }
+            }
+
+            S3MO_Tracker::clear_offload_status($attachment_id);
+            $cleared++;
+
+            $count++;
+
+            if ($count % 100 === 0) {
+                $this->cleanup_memory();
+            }
+        }
+
+        return [
+            'cleared'       => $cleared,
+            'deleted'       => $deleted,
+            'delete_errors' => $delete_errors,
+        ];
+    }
+
+    /**
      * Get display information for an attachment.
      *
      * @param int $attachment_id WordPress attachment post ID.
