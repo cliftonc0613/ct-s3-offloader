@@ -80,9 +80,18 @@ add_action('plugins_loaded', function (): void {
         });
     }
 
-    if (is_admin()) {
-        $client = empty($missing) ? new S3MO_Client() : null;
-        $settings = new S3MO_Settings_Page($client);
+    if (empty($missing)) {
+        $client = new S3MO_Client();
+
+        $upload_handler = new S3MO_Upload_Handler($client);
+        $upload_handler->register_hooks();
+
+        if (is_admin()) {
+            $settings = new S3MO_Settings_Page($client);
+            $settings->register_hooks();
+        }
+    } elseif (is_admin()) {
+        $settings = new S3MO_Settings_Page(null);
         $settings->register_hooks();
     }
 }, 10);
