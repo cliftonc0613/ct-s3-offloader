@@ -92,11 +92,11 @@ Plans:
   3. Running `wp ct-s3 offload --dry-run` shows what would be uploaded without making any changes
   4. Migration resumes from where it stopped after a failure without re-uploading already-offloaded files
   5. Completion summary reports counts for successful, failed, and skipped files
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: WP-CLI command registration and batch processing engine
-- [ ] 05-02: Dry-run, resume, progress tracking, and summary reporting
+- [ ] 05-01-PLAN.md — Bulk migrator engine and WP-CLI offload command with batching, retry, dry-run, and progress output
+- [ ] 05-02-PLAN.md — Status and reset subcommands with summary counts, verbose tables, and metadata cleanup
 
 ### Phase 6: Admin UI and Finalization
 **Goal**: Media Library provides visual offload status per file, settings page shows storage statistics, and plugin cleans up on uninstall
