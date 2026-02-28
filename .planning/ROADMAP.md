@@ -63,11 +63,11 @@ Plans:
   3. Original local URLs remain stored in the database and are never modified
   4. Deactivating the plugin immediately restores all URLs to local paths with no broken images
   5. CORS headers are properly configured so cross-origin media requests (fonts, images) work without errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Attachment URL filter and content URL rewriting
-- [ ] 03-02: Srcset, Gutenberg, REST API, and CORS handling
+- [ ] 03-01-PLAN.md — S3MO_URL_Rewriter class with attachment URL and content filters, bootstrap wiring
+- [ ] 03-02-PLAN.md — Srcset, REST API, admin modal rewriting, and CORS headers
 
 ### Phase 4: Deletion Sync
 **Goal**: Deleting media from WordPress removes all corresponding files from S3 without leaving orphaned objects
