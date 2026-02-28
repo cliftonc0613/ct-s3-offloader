@@ -42,6 +42,7 @@ class S3MO_URL_Rewriter {
         add_filter('the_content', [$this, 'filter_content'], 10, 1);
         add_filter('rest_prepare_attachment', [$this, 'filter_rest_attachment'], 10, 3);
         add_filter('wp_prepare_attachment_for_js', [$this, 'filter_attachment_for_js'], 10, 3);
+        add_action('send_headers', [$this, 'add_cors_headers'], 10);
     }
 
     /**
@@ -274,6 +275,52 @@ class S3MO_URL_Rewriter {
         }
 
         return $response;
+    }
+
+    /**
+     * Set CORS headers on WP REST API responses for cross-origin media requests.
+     *
+     * Enables the headless Next.js frontend to fetch attachment data from
+     * /wp-json/wp/v2/media without cross-origin errors. Uses an explicit
+     * allowlist of origins — never a wildcard.
+     *
+     * CORS Architecture (both layers are needed for a fully working headless setup):
+     *   1. WP REST API CORS: Handled by this method (for /wp-json/ requests).
+     *   2. CloudFront CORS: Requires separate AWS configuration:
+     *      - S3 bucket CORS rules allowing GET/HEAD from allowed origins.
+     *      - CloudFront Origin Request Policy to forward the Origin header.
+     *      - CloudFront Response Headers Policy to pass CORS headers through.
+     */
+    public function add_cors_headers(): void {
+        if (! defined('REST_REQUEST') || ! REST_REQUEST) {
+            return;
+        }
+
+        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+
+        if (empty($origin)) {
+            return;
+        }
+
+        // Build allowed origins list.
+        $allowed = [
+            get_site_url(),
+            'http://localhost:3000',
+            'http://localhost:3001',
+        ];
+
+        if (defined('S3MO_CDN_URL') && S3MO_CDN_URL) {
+            $allowed[] = rtrim(S3MO_CDN_URL, '/');
+        }
+
+        if (! in_array($origin, $allowed, true)) {
+            return;
+        }
+
+        header('Access-Control-Allow-Origin: ' . $origin);
+        header('Access-Control-Allow-Methods: GET, HEAD, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+        header('Access-Control-Expose-Headers: Content-Length, Content-Range');
     }
 
     /**
