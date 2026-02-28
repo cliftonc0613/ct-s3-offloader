@@ -186,31 +186,150 @@ class S3MO_CLI_Command extends WP_CLI_Command {
     }
 
     /**
-     * Show migration status (stub).
+     * Show migration status.
+     *
+     * Displays summary counts of offloaded, pending, and total attachments.
+     * Use --verbose for a per-file table with offload status for each attachment.
+     *
+     * ## OPTIONS
+     *
+     * [--verbose]
+     * : Show per-file status table instead of summary counts.
+     *
+     * [--mime-type=<type>]
+     * : Filter by MIME type (e.g. image/jpeg).
+     *
+     * [--format=<format>]
+     * : Output format.
+     * ---
+     * default: table
+     * options:
+     *   - table
+     *   - csv
+     * ---
      *
      * ## EXAMPLES
      *
+     *     # Show summary counts
      *     $ wp ct-s3 status
      *
+     *     # Show per-file status table
+     *     $ wp ct-s3 status --verbose
+     *
+     *     # Show only images in CSV format
+     *     $ wp ct-s3 status --verbose --mime-type=image/jpeg --format=csv
+     *
      * @param array $args       Positional arguments (unused).
-     * @param array $assoc_args Associative arguments (unused).
+     * @param array $assoc_args Associative arguments.
      */
     public function status(array $args, array $assoc_args): void {
-        WP_CLI::error('Not yet implemented.');
+        $verbose   = \WP_CLI\Utils\get_flag_value($assoc_args, 'verbose', false);
+        $mime_type = \WP_CLI\Utils\get_flag_value($assoc_args, 'mime-type', null);
+        $format    = \WP_CLI\Utils\get_flag_value($assoc_args, 'format', 'table');
+
+        if ($verbose) {
+            $statuses = $this->migrator->get_all_attachment_statuses($mime_type);
+
+            if (empty($statuses)) {
+                WP_CLI::log('No attachments found.');
+                return;
+            }
+
+            \WP_CLI\Utils\format_items($format, $statuses, ['ID', 'Filename', 'MIME', 'Status', 'S3 Key']);
+        } else {
+            $counts = $this->migrator->get_status_counts($mime_type);
+
+            $items = [
+                ['Metric' => 'Total',     'Count' => $counts['total']],
+                ['Metric' => 'Offloaded', 'Count' => $counts['offloaded']],
+                ['Metric' => 'Pending',   'Count' => $counts['pending']],
+            ];
+
+            \WP_CLI\Utils\format_items($format, $items, ['Metric', 'Count']);
+        }
     }
 
     /**
-     * Reset offload tracking (stub).
+     * Reset offload tracking metadata.
+     *
+     * Clears all offload tracking metadata for attachments. Optionally deletes
+     * the corresponding S3 objects before clearing metadata.
+     *
+     * ## OPTIONS
+     *
+     * [--delete-remote]
+     * : Also delete S3 objects before clearing metadata.
+     *
+     * [--mime-type=<type>]
+     * : Only reset attachments of this MIME type.
+     *
+     * [--yes]
+     * : Skip the confirmation prompt.
      *
      * ## EXAMPLES
      *
+     *     # Reset tracking with confirmation prompt
      *     $ wp ct-s3 reset
      *
+     *     # Reset and delete remote S3 objects
+     *     $ wp ct-s3 reset --delete-remote
+     *
+     *     # Skip confirmation
+     *     $ wp ct-s3 reset --yes
+     *
+     *     # Reset only images, delete remote, skip confirmation
+     *     $ wp ct-s3 reset --mime-type=image/jpeg --delete-remote --yes
+     *
      * @param array $args       Positional arguments (unused).
-     * @param array $assoc_args Associative arguments (unused).
+     * @param array $assoc_args Associative arguments.
      */
     public function reset(array $args, array $assoc_args): void {
-        WP_CLI::error('Not yet implemented.');
+        $delete_remote = \WP_CLI\Utils\get_flag_value($assoc_args, 'delete-remote', false);
+        $mime_type     = \WP_CLI\Utils\get_flag_value($assoc_args, 'mime-type', null);
+
+        // Check how many are offloaded before proceeding.
+        $counts = $this->migrator->get_status_counts($mime_type);
+
+        if ($counts['offloaded'] === 0) {
+            WP_CLI::success('No offloaded attachments to reset.');
+            return;
+        }
+
+        $message = sprintf(
+            'This will clear offload tracking for %d attachment(s).',
+            $counts['offloaded']
+        );
+
+        if ($delete_remote) {
+            $message .= ' S3 objects will also be DELETED.';
+        }
+
+        WP_CLI::confirm($message, $assoc_args);
+
+        $result = $this->migrator->reset_tracking($mime_type, $delete_remote);
+
+        WP_CLI::log('');
+        WP_CLI::log('--- Reset Summary ---');
+        WP_CLI::log(sprintf('  Cleared: %d', $result['cleared']));
+
+        if ($delete_remote) {
+            WP_CLI::log(sprintf('  S3 objects deleted: %d', $result['deleted']));
+
+            if ($result['delete_errors'] > 0) {
+                WP_CLI::log(sprintf('  Delete errors: %d', $result['delete_errors']));
+            }
+        }
+
+        WP_CLI::log('');
+
+        if ($result['delete_errors'] > 0) {
+            WP_CLI::warning(sprintf(
+                '%d S3 object(s) could not be deleted.',
+                $result['delete_errors']
+            ));
+        }
+
+        WP_CLI::success(sprintf('Reset complete. %d attachment(s) cleared.', $result['cleared']));
     }
 
     /**
