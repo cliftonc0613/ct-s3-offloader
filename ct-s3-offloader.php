@@ -58,6 +58,17 @@ if (! class_exists('Aws\Sdk')) {
     require_once $sdk_autoloader;
 }
 
+/* ─── WP-CLI Commands ──────────────────────────────────────────────── */
+
+if (defined('WP_CLI') && WP_CLI) {
+    $required_cli = ['S3MO_BUCKET', 'S3MO_REGION', 'S3MO_KEY', 'S3MO_SECRET'];
+    $missing_cli  = array_filter($required_cli, function ($c) { return ! defined($c); });
+
+    if (empty($missing_cli)) {
+        WP_CLI::add_command('ct-s3', new S3MO_CLI_Command(new S3MO_Client()));
+    }
+}
+
 /* ─── Plugin Initialization ─────────────────────────────────────────── */
 
 add_action('plugins_loaded', function (): void {
