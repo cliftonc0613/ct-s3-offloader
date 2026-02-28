@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-27)
 
 **Core value:** Media files upload to S3 and serve from CloudFront transparently
-**Current focus:** Phase 3 - URL Rewriting and CloudFront
+**Current focus:** Phase 3 complete. Ready for Phase 4 - Admin Settings UI
 
 ## Current Position
 
 Phase: 3 of 6 (URL Rewriting and CloudFront)
-Plan: 1 of 2
-Status: In progress
-Last activity: 2026-02-28 — Completed 03-01-PLAN.md
+Plan: 2 of 2
+Status: Phase complete
+Last activity: 2026-02-28 — Completed 03-02-PLAN.md
 
-Progress: [████░░░░░░] 42%
+Progress: [██████░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: ~2m 15s
-- Total execution time: ~11 minutes
+- Total plans completed: 6
+- Average duration: ~2m 10s
+- Total execution time: ~13 minutes
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [████░░░░░░] 42%
 |-------|-------|-------|----------|
 | 1 - Foundation | 2/2 | ~5m | ~2m 30s |
 | 2 - S3 Upload Pipeline | 2/2 | ~4m | ~2m |
-| 3 - URL Rewriting | 1/2 | ~2m | ~2m |
+| 3 - URL Rewriting | 2/2 | ~4m | ~2m |
 
 **Recent Trend:**
-- Last 5 plans: 01-02, 02-01, 02-02, 03-01
+- Last 5 plans: 02-01, 02-02, 03-01, 03-02
 - Trend: Consistent execution speed
 
 *Updated after each plan completion*
@@ -55,20 +55,21 @@ Recent decisions affecting current work:
 - Only mark offloaded when ALL files (original + thumbnails) succeed
 - str_replace over regex for content URL filtering (simpler, faster, sufficient)
 - URL rewriter wired outside is_admin() for frontend + REST API + admin contexts
+- Explicit origin allowlist for CORS (no wildcard), includes site URL + localhost dev ports + CDN URL
+- REST API source_url uses get_object_url for canonical URL; sizes use bulk str_replace
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
 - SDK namespace conflict resolved: using class_exists('Aws\Sdk') guard (decided in 01-01)
 - AWS SDK zip size (~7MB extracted) — acceptable for private distribution
-- Headless/REST API URL rewriting partially addressed (the_content filter covers content.rendered)
-- Full REST API srcset/thumbnail rewriting needed in 03-02
+- CloudFront CORS requires separate AWS configuration (S3 bucket CORS rules + CF Origin Request Policy) — documented in code comments
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 03-01-PLAN.md
-Resume: Execute 03-02-PLAN.md (srcset and REST API filters)
+Stopped at: Completed 03-02-PLAN.md (Phase 3 complete)
+Resume: Begin Phase 4 - Admin Settings UI
