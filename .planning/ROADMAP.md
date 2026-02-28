@@ -77,10 +77,10 @@ Plans:
   1. Deleting a media item from the Media Library removes the original file and all thumbnail sizes from S3
   2. S3 deletion fires before WordPress removes attachment metadata so the S3 key is still accessible
   3. Failed S3 deletions are logged but do not prevent WordPress from completing the media deletion
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: Deletion handler with S3 cleanup and error logging
+- [ ] 04-01-PLAN.md — Delete handler class with S3 cleanup, error logging, and bootstrap wiring
 
 ### Phase 5: Bulk Migration
 **Goal**: Site owner can migrate an existing 1000+ file media library to S3 via WP-CLI with progress tracking and fault tolerance
