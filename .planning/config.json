@@ -1,0 +1,15 @@
+{
+  "project": "ct-s3-offloader",
+  "version": "1.0.0",
+  "initialized": "2026-02-27",
+  "mode": "interactive",
+  "depth": "comprehensive",
+  "parallelization": true,
+  "commit_docs": true,
+  "model_profile": "quality",
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true
+  }
+}
