@@ -7,8 +7,11 @@
  * no database values are modified.
  *
  * Hooks:
- *   wp_get_attachment_url — Rewrites individual attachment URLs (canonical).
- *   the_content           — Bulk-replaces local upload base in post content.
+ *   wp_get_attachment_url      — Rewrites individual attachment URLs (canonical).
+ *   wp_calculate_image_srcset  — Rewrites responsive srcset URLs to CDN.
+ *   the_content                — Bulk-replaces local upload base in post content.
+ *   rest_prepare_attachment    — Rewrites REST API attachment source_url and sizes.
+ *   wp_prepare_attachment_for_js — Rewrites admin Media Library modal URLs.
  *
  * @package CT_S3_Offloader
  */
@@ -35,7 +38,10 @@ class S3MO_URL_Rewriter {
      */
     public function register_hooks(): void {
         add_filter('wp_get_attachment_url', [$this, 'filter_attachment_url'], 10, 2);
+        add_filter('wp_calculate_image_srcset', [$this, 'filter_srcset'], 10, 5);
         add_filter('the_content', [$this, 'filter_content'], 10, 1);
+        add_filter('rest_prepare_attachment', [$this, 'filter_rest_attachment'], 10, 3);
+        add_filter('wp_prepare_attachment_for_js', [$this, 'filter_attachment_for_js'], 10, 3);
     }
 
     /**
@@ -107,6 +113,167 @@ class S3MO_URL_Rewriter {
         }
 
         return str_replace($search, $replace, $content);
+    }
+
+    /**
+     * Rewrite responsive srcset URLs to CDN for offloaded attachments.
+     *
+     * WordPress drops the entire srcset if source URLs do not share the
+     * same domain as the main image src (already rewritten by
+     * wp_get_attachment_url). This filter ensures all srcset entries
+     * also point to CloudFront.
+     *
+     * @param array  $sources        Array of image source data (url, descriptor, value).
+     * @param array  $size_array     Requested image size (width, height).
+     * @param string $image_src      The src attribute for the image.
+     * @param array  $image_meta     Attachment image metadata.
+     * @param int    $attachment_id  The attachment post ID.
+     *
+     * @return array Modified sources with CDN URLs if offloaded.
+     */
+    public function filter_srcset(array $sources, array $size_array, string $image_src, array $image_meta, int $attachment_id): array {
+        if (! S3MO_Tracker::is_offloaded($attachment_id)) {
+            return $sources;
+        }
+
+        $upload_dir = wp_get_upload_dir();
+        $local_base = $upload_dir['baseurl'];
+        $cdn_base   = $this->get_cdn_uploads_base();
+
+        if ($local_base === $cdn_base) {
+            return $sources;
+        }
+
+        // Build search/replace pairs for both protocol variants.
+        $search  = [$local_base];
+        $replace = [$cdn_base];
+
+        if (strpos($local_base, 'https://') === 0) {
+            $search[]  = 'http://' . substr($local_base, 8);
+            $replace[] = $cdn_base;
+        } elseif (strpos($local_base, 'http://') === 0) {
+            $search[]  = 'https://' . substr($local_base, 7);
+            $replace[] = $cdn_base;
+        }
+
+        foreach ($sources as &$source) {
+            $source['url'] = str_replace($search, $replace, $source['url']);
+        }
+
+        return $sources;
+    }
+
+    /**
+     * Rewrite attachment URLs in REST API responses.
+     *
+     * Critical for the headless Next.js frontend which reads attachment
+     * data from /wp-json/wp/v2/media. Rewrites both the top-level
+     * source_url and each thumbnail size source_url.
+     *
+     * @param WP_REST_Response $response   The REST response object.
+     * @param WP_Post          $attachment The attachment post object.
+     * @param WP_REST_Request  $request    The REST request object.
+     *
+     * @return WP_REST_Response Modified response with CDN URLs.
+     */
+    public function filter_rest_attachment($response, $attachment, $request) {
+        $attachment_id = $attachment->ID;
+
+        if (! S3MO_Tracker::is_offloaded($attachment_id)) {
+            return $response;
+        }
+
+        // Rewrite top-level source_url using the canonical S3 key.
+        $key = S3MO_Tracker::get_s3_key($attachment_id);
+        if (! empty($key)) {
+            $response->data['source_url'] = $this->client->get_object_url($key);
+        }
+
+        // Rewrite thumbnail size URLs via str_replace.
+        if (! empty($response->data['media_details']['sizes'])) {
+            $upload_dir = wp_get_upload_dir();
+            $local_base = $upload_dir['baseurl'];
+            $cdn_base   = $this->get_cdn_uploads_base();
+
+            $search  = [$local_base];
+            $replace = [$cdn_base];
+
+            if (strpos($local_base, 'https://') === 0) {
+                $search[]  = 'http://' . substr($local_base, 8);
+                $replace[] = $cdn_base;
+            } elseif (strpos($local_base, 'http://') === 0) {
+                $search[]  = 'https://' . substr($local_base, 7);
+                $replace[] = $cdn_base;
+            }
+
+            foreach ($response->data['media_details']['sizes'] as &$size) {
+                if (isset($size['source_url'])) {
+                    $size['source_url'] = str_replace($search, $replace, $size['source_url']);
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Rewrite attachment URLs in the admin Media Library modal (wp.media).
+     *
+     * Keeps the WordPress admin experience consistent by showing CDN URLs
+     * for offloaded media in the grid/list modal views.
+     *
+     * @param array   $response   Array of prepared attachment data.
+     * @param WP_Post $attachment The attachment post object.
+     * @param array   $meta       Attachment metadata (wp_get_attachment_metadata).
+     *
+     * @return array Modified response with CDN URLs.
+     */
+    public function filter_attachment_for_js(array $response, $attachment, $meta): array {
+        $attachment_id = $attachment->ID;
+
+        if (! S3MO_Tracker::is_offloaded($attachment_id)) {
+            return $response;
+        }
+
+        $upload_dir = wp_get_upload_dir();
+        $local_base = $upload_dir['baseurl'];
+        $cdn_base   = $this->get_cdn_uploads_base();
+
+        if ($local_base === $cdn_base) {
+            return $response;
+        }
+
+        $search  = [$local_base];
+        $replace = [$cdn_base];
+
+        if (strpos($local_base, 'https://') === 0) {
+            $search[]  = 'http://' . substr($local_base, 8);
+            $replace[] = $cdn_base;
+        } elseif (strpos($local_base, 'http://') === 0) {
+            $search[]  = 'https://' . substr($local_base, 7);
+            $replace[] = $cdn_base;
+        }
+
+        // Rewrite main URL.
+        if (! empty($response['url'])) {
+            $response['url'] = str_replace($search, $replace, $response['url']);
+        }
+
+        // Rewrite thumbnail size URLs.
+        if (! empty($response['sizes'])) {
+            foreach ($response['sizes'] as &$size) {
+                if (isset($size['url'])) {
+                    $size['url'] = str_replace($search, $replace, $size['url']);
+                }
+            }
+        }
+
+        // Rewrite icon URL (mime-type icon fallback).
+        if (! empty($response['icon'])) {
+            $response['icon'] = str_replace($search, $replace, $response['icon']);
+        }
+
+        return $response;
     }
 
     /**
