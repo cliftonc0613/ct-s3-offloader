@@ -86,6 +86,9 @@ add_action('plugins_loaded', function (): void {
         $upload_handler = new S3MO_Upload_Handler($client);
         $upload_handler->register_hooks();
 
+        $url_rewriter = new S3MO_URL_Rewriter($client);
+        $url_rewriter->register_hooks();
+
         if (is_admin()) {
             $settings = new S3MO_Settings_Page($client);
             $settings->register_hooks();
