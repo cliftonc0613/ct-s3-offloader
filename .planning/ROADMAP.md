@@ -24,7 +24,7 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full phase details.
 - Integer phases (7, 8): Planned milestone work
 - Decimal phases (7.1, 7.2): Urgent insertions if needed (marked with INSERTED)
 
-- [ ] **Phase 7: PHP 7.4 Compatibility** - Downgrade AWS SDK and ensure all plugin code runs on PHP 7.4 through 8.x
+- [x] **Phase 7: PHP 7.4 Compatibility** - Downgrade AWS SDK and ensure all plugin code runs on PHP 7.4 through 8.x
 - [ ] **Phase 8: Tech Debt Resolution** - Fix functional gaps, eliminate code duplication, and clean up spec mismatches
 
 ## Phase Details
@@ -42,8 +42,8 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full phase details.
 **Plans:** 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Download AWS SDK v3.337.3 and add runtime version pinning
-- [ ] 07-02-PLAN.md — Update PHP version references in documentation and plugin header
+- [x] 07-01-PLAN.md — Download AWS SDK v3.337.3 and add runtime version pinning
+- [x] 07-02-PLAN.md — Update PHP version references in documentation and plugin header
 
 ### Phase 8: Tech Debt Resolution
 **Goal**: All dead code paths become functional, duplicated logic is consolidated, and spec mismatches are resolved
@@ -70,5 +70,5 @@ Phases execute in numeric order: 7 then 8
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-6 | v1.0 | 11/11 | Complete | 2026-02-28 |
-| 7. PHP 7.4 Compatibility | v1.1 | 0/2 | Not started | - |
+| 7. PHP 7.4 Compatibility | v1.1 | 2/2 | Complete | 2026-03-01 |
 | 8. Tech Debt Resolution | v1.1 | 0/3 | Not started | - |
