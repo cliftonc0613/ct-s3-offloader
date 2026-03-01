@@ -29,6 +29,7 @@ class S3MO_Settings_Page {
         add_action('admin_menu', [$this, 'add_menu']);
         add_action('admin_init', [$this, 'register_settings']);
         add_action('wp_ajax_s3mo_test_connection', [$this, 'ajax_test_connection']);
+        add_action('wp_ajax_s3mo_refresh_stats', [$this, 'ajax_refresh_stats']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
     }
 
@@ -56,6 +57,12 @@ class S3MO_Settings_Page {
         ]);
 
         register_setting('s3mo_settings', 's3mo_delete_local', [
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'type'              => 'boolean',
+            'default'           => false,
+        ]);
+
+        register_setting('s3mo_settings', 's3mo_delete_s3_on_uninstall', [
             'sanitize_callback' => 'rest_sanitize_boolean',
             'type'              => 'boolean',
             'default'           => false,
@@ -108,6 +115,30 @@ class S3MO_Settings_Page {
     }
 
     /**
+     * AJAX handler for stats refresh.
+     */
+    public function ajax_refresh_stats(): void {
+        check_ajax_referer('s3mo_test_nonce');
+
+        if (! current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Unauthorized'], 403);
+        }
+
+        $stats = S3MO_Stats::refresh();
+
+        $formatted = [
+            'total_files'    => number_format_i18n($stats['total_files']),
+            'total_size'     => size_format($stats['total_size']),
+            'pending'        => number_format_i18n($stats['pending']),
+            'last_offloaded' => $stats['last_offloaded']
+                ? human_time_diff(strtotime($stats['last_offloaded']), current_time('timestamp')) . ' ago'
+                : 'Never',
+        ];
+
+        wp_send_json_success($formatted);
+    }
+
+    /**
      * Enqueue admin assets only on our settings page.
      *
      * @param string $hook Current admin page hook suffix.
@@ -142,9 +173,39 @@ class S3MO_Settings_Page {
      * Render the settings page.
      */
     public function render_page(): void {
+        $stats = S3MO_Stats::get_cached();
+        $formatted_size = size_format($stats['total_size']);
+        $formatted_last = $stats['last_offloaded']
+            ? human_time_diff(strtotime($stats['last_offloaded']), current_time('timestamp')) . ' ago'
+            : 'Never';
         ?>
         <div class="wrap">
             <h1>CT S3 Offloader Settings</h1>
+
+            <div class="s3mo-stats-dashboard">
+                <h2>Storage Statistics</h2>
+                <div class="s3mo-stats-grid">
+                    <div class="s3mo-stat-card">
+                        <span class="s3mo-stat-value" id="s3mo-stat-total-files"><?php echo esc_html(number_format_i18n($stats['total_files'])); ?></span>
+                        <span class="s3mo-stat-label">Files on S3</span>
+                    </div>
+                    <div class="s3mo-stat-card">
+                        <span class="s3mo-stat-value" id="s3mo-stat-total-size"><?php echo esc_html($formatted_size); ?></span>
+                        <span class="s3mo-stat-label">Total Size</span>
+                    </div>
+                    <div class="s3mo-stat-card">
+                        <span class="s3mo-stat-value" id="s3mo-stat-pending"><?php echo esc_html(number_format_i18n($stats['pending'])); ?></span>
+                        <span class="s3mo-stat-label">Pending</span>
+                    </div>
+                    <div class="s3mo-stat-card">
+                        <span class="s3mo-stat-value" id="s3mo-stat-last-offloaded"><?php echo esc_html($formatted_last); ?></span>
+                        <span class="s3mo-stat-label">Last Offloaded</span>
+                    </div>
+                </div>
+                <p>
+                    <button type="button" class="button button-secondary" id="s3mo-refresh-stats">Refresh Stats</button>
+                </p>
+            </div>
 
             <h2>AWS Credentials</h2>
             <p class="description">
@@ -243,6 +304,22 @@ class S3MO_Settings_Page {
                                        <?php checked(get_option('s3mo_delete_local', false)); ?> />
                                 Remove local file after successful S3 upload (saves disk space)
                             </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Delete S3 Files on Uninstall</th>
+                        <td>
+                            <label for="s3mo_delete_s3_on_uninstall">
+                                <input type="checkbox"
+                                       id="s3mo_delete_s3_on_uninstall"
+                                       name="s3mo_delete_s3_on_uninstall"
+                                       value="1"
+                                       <?php checked(get_option('s3mo_delete_s3_on_uninstall', false)); ?> />
+                                Delete all S3 objects when the plugin is uninstalled
+                            </label>
+                            <p class="description" style="color: #d63638;">
+                                <strong>Warning:</strong> This will permanently delete all offloaded media files from S3 when the plugin is deleted.
+                            </p>
                         </td>
                     </tr>
                 </table>

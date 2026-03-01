@@ -117,8 +117,10 @@ add_action('plugins_loaded', function (): void {
 register_activation_hook(__FILE__, function (): void {
     add_option('s3mo_path_prefix', 'wp-content/uploads');
     add_option('s3mo_delete_local', false);
+    add_option('s3mo_delete_s3_on_uninstall', false);
 });
 
 register_deactivation_hook(__FILE__, function (): void {
     delete_transient('s3mo_connection_status');
+    delete_transient('s3mo_stats_cache');
 });

@@ -42,4 +42,32 @@
         var $details = $(this).siblings('.s3mo-details');
         $details.toggleClass('is-visible');
     });
+
+    // Refresh stats dashboard via AJAX.
+    $(document).on('click', '#s3mo-refresh-stats', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+
+        $btn.prop('disabled', true).text('Refreshing...');
+
+        $.ajax({
+            url: s3moAdmin.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 's3mo_refresh_stats',
+                _ajax_nonce: s3moAdmin.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#s3mo-stat-total-files').text(response.data.total_files);
+                    $('#s3mo-stat-total-size').text(response.data.total_size);
+                    $('#s3mo-stat-pending').text(response.data.pending);
+                    $('#s3mo-stat-last-offloaded').text(response.data.last_offloaded);
+                }
+            },
+            complete: function() {
+                $btn.prop('disabled', false).text('Refresh Stats');
+            }
+        });
+    });
 })(jQuery);

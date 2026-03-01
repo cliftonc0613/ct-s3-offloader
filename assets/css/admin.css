@@ -82,3 +82,56 @@
 .s3mo-credential-value {
     font-family: monospace;
 }
+
+/* ─── Stats Dashboard ─────────────────────────────────────────────── */
+
+.s3mo-stats-dashboard {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-left: 4px solid #2271b1;
+    padding: 16px 20px;
+    margin: 20px 0;
+}
+
+.s3mo-stats-dashboard h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.s3mo-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.s3mo-stat-card {
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+}
+
+.s3mo-stat-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 600;
+    color: #1d2327;
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.s3mo-stat-label {
+    display: block;
+    font-size: 13px;
+    color: #50575e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media screen and (max-width: 782px) {
+    .s3mo-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
