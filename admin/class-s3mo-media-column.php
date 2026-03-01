@@ -46,7 +46,11 @@ class S3MO_Media_Column {
 
         $info = S3MO_Tracker::get_offload_info($post_id);
 
-        if ($info['offloaded'] === '1') {
+        $error = get_post_meta($post_id, '_s3mo_error', true);
+
+        if (! empty($error)) {
+            $this->render_error_status();
+        } elseif ($info['offloaded'] === '1') {
             $this->render_s3_status($post_id, $info);
         } else {
             $this->render_local_status();
@@ -87,6 +91,13 @@ class S3MO_Media_Column {
      */
     private function render_local_status(): void {
         echo '<span class="s3mo-status-dot s3mo-status-local"></span>Local';
+    }
+
+    /**
+     * Render the error status.
+     */
+    private function render_error_status(): void {
+        echo '<span class="s3mo-status-dot s3mo-status-error"></span>Error';
     }
 
     /**

@@ -317,7 +317,7 @@ class S3MO_Settings_Page {
                                        <?php checked(get_option('s3mo_delete_s3_on_uninstall', false)); ?> />
                                 Delete all S3 objects when the plugin is uninstalled
                             </label>
-                            <p class="description" style="color: #d63638;">
+                            <p class="description s3mo-warning-text">
                                 <strong>Warning:</strong> This will permanently delete all offloaded media files from S3 when the plugin is deleted.
                             </p>
                         </td>

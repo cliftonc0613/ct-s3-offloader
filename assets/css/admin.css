@@ -135,3 +135,9 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ─── Warning Text ────────────────────────────────────────────────── */
+
+.s3mo-warning-text {
+    color: #d63638;
+}
