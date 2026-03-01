@@ -58,7 +58,7 @@ All classes use the `S3MO_` prefix. The custom autoloader in `ct-s3-offloader.ph
 
 ### Dependency Pattern
 
-`S3MO_Client` is constructed once in bootstrap and injected into all classes needing S3 access. `S3MO_Tracker` and `S3MO_Stats` are pure static classes — called directly, not injected.
+`S3MO_Client` is constructed once in bootstrap and injected into all classes needing S3 access. `S3MO_Tracker` and `S3MO_Stats` are pure static classes — called directly, not injected. `S3MO_Tracker` also provides shared key-building logic (`build_file_list`) used by both `S3MO_Upload_Handler` and `S3MO_Bulk_Migrator`, and error tracking methods (`set_error`/`clear_error`) for upload failure recording.
 
 ### AWS SDK
 
@@ -72,18 +72,18 @@ Bundled manually in `aws-sdk/` (gitignored). Must be downloaded and extracted as
 - `_s3mo_key` — Full S3 object key
 - `_s3mo_bucket` — Bucket name at upload time
 - `_s3mo_offloaded_at` — ISO 8601 timestamp
-- `_s3mo_error` — Error message (currently unused/dead code)
+- `_s3mo_error` — Error message from last failed upload attempt (cleared on success)
 
 ### Options
 
 - `s3mo_path_prefix` — S3 key prefix (default: `wp-content/uploads`)
-- `s3mo_delete_local` — Checkbox registered but **currently a no-op**
+- `s3mo_delete_local` — When enabled, deletes local files after successful S3 upload
 - `s3mo_delete_s3_on_uninstall` — Controls whether `uninstall.php` deletes S3 objects
 
 ### Transients
 
 - `s3mo_stats_cache` — 1-hour cached stats
-- `s3mo_connection_status` — Read by Admin Notices but **never written** (dead code)
+- `s3mo_connection_status` — Written by Settings Page AJAX connection test, read by Admin Notices for persistent status display
 
 ## WP-CLI Commands
 
@@ -99,11 +99,7 @@ Key `offload` flags: `--dry-run`, `--force`, `--batch-size=<n>`, `--sleep=<n>`, 
 
 ## Known Tech Debt
 
-1. `s3mo_delete_local` option registered/saved but never read — checkbox has no effect
-2. `s3mo_connection_status` transient read by Admin Notices but never written — persistent failure notice cannot fire
-3. `_s3mo_error` postmeta read by Media Column but never written — red "Error" badge is dead code
-4. S3 key-building logic duplicated between `S3MO_Upload_Handler` and `S3MO_Bulk_Migrator`
-5. `S3MO_Stats` hard-codes meta key strings instead of using `S3MO_Tracker` constants
+1. **CORS handler scope** — `S3MO_URL_Rewriter::add_cors_headers()` sends WP REST API CORS headers for headless/decoupled WordPress setups. This is intentional functionality (not dead code), but only useful when WordPress serves as a headless CMS. Full CORS support also requires CloudFront-side configuration (S3 bucket CORS rules + CloudFront Response Headers Policy).
 
 ## Development Notes
 
