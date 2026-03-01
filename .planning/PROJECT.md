@@ -29,7 +29,24 @@ A custom WordPress plugin that automatically offloads media uploads to Amazon S3
 
 ### Active
 
-(None — next milestone not yet defined)
+- [ ] PHP 7.4 compatibility across all plugin classes (remove typed properties, named arguments, constructor property promotion)
+- [ ] Plugin header updated to `Requires PHP: 7.4`
+- [ ] Implement `s3mo_delete_local` option — upload handler reads setting and deletes local files after confirmed S3 upload
+- [ ] Write `s3mo_connection_status` transient from AJAX connection test handler so failure notice works
+- [ ] Write `_s3mo_error` postmeta on upload failures so Media Library error badge functions
+- [ ] Extract shared S3 key-building logic into `S3MO_Tracker` to eliminate duplication
+- [ ] `S3MO_Stats` uses `S3MO_Tracker` constants instead of hard-coded meta key strings
+- [ ] Remove unused `S3MO_PLUGIN_BASENAME` constant
+
+## Current Milestone: v1.1 PHP 7.4 Compatibility & Tech Debt
+
+**Goal:** Make the plugin compatible with PHP 7.4+ and resolve all tech debt from v1.0 audit.
+
+**Target features:**
+- PHP 7.4 through 8.x compatibility (downgrade all PHP 8.1+ syntax)
+- Fix 3 functional gaps (dead code paths that should work)
+- Fix 3 code quality issues (duplication, hard-coded strings, unused constant)
+- Clean up spec vs implementation mismatch
 
 ### Out of Scope
 
@@ -53,6 +70,7 @@ Known tech debt from v1.0 audit: 7 items (no blockers). See `.planning/milestone
 ## Constraints
 
 - **No Composer**: AWS SDK bundled directly (extracted zip)
+- **PHP 7.4+**: Must work on PHP 7.4 through 8.x — no typed properties, named arguments, or constructor property promotion
 - **Local by Flywheel**: Development environment with specific PHP/MySQL paths
 - **WordPress coding standards**: Follow WP PHP conventions, hook patterns, admin API
 - **Large migration**: Must handle 1000+ files with batching, progress tracking, resume on failure
@@ -77,6 +95,7 @@ Known tech debt from v1.0 audit: 7 items (no blockers). See `.planning/milestone
 | Explicit CORS origin allowlist | Security over convenience; no wildcard origins | ✓ Good |
 | delete_post_meta_by_key() for uninstall | Proper WordPress cache invalidation vs raw SQL | ✓ Good |
 | Optional S3 object deletion on uninstall | User choice to preserve or clean S3 data | ✓ Good |
+| Downgrade to PHP 7.4 | Broader hosting compatibility; AWS SDK v3 supports 7.4+ via extracted zip | — Pending |
 
 ---
-*Last updated: 2026-02-28 after v1.0 milestone*
+*Last updated: 2026-03-01 after v1.1 milestone start*
