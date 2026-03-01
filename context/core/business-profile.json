@@ -1,0 +1,37 @@
+{
+  "_instructions": "Fill in this business profile to help Claude understand your business context. Remove any sections that don't apply.",
+  "_metadata": {
+    "version": "1.0",
+    "created": "2026-02-28",
+    "project": "CT S3 Offloader"
+  },
+  "business": {
+    "name": "",
+    "tagline": "",
+    "description": "",
+    "website": "",
+    "industry": "WordPress Plugin Development",
+    "founded": ""
+  },
+  "positioning": {
+    "unique_value_proposition": "",
+    "target_market": "",
+    "competitive_advantage": "",
+    "key_differentiators": []
+  },
+  "offerings": {
+    "products": [],
+    "services": [],
+    "pricing_model": ""
+  },
+  "audience": {
+    "primary": "",
+    "secondary": "",
+    "use_cases": []
+  },
+  "operations": {
+    "team_size": "",
+    "tech_stack": ["PHP", "WordPress", "AWS S3", "CloudFront"],
+    "distribution": "WordPress plugin directory / manual install"
+  }
+}
