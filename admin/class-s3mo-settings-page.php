@@ -107,6 +107,9 @@ class S3MO_Settings_Page {
 
         $result = $this->client->test_connection();
 
+        // DEBT-02: Write connection status transient for Admin Notices to read.
+        set_transient('s3mo_connection_status', $result);
+
         if ($result['success']) {
             wp_send_json_success($result);
         } else {

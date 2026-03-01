@@ -189,6 +189,18 @@ class S3MO_Bulk_Migrator {
                     $files[0]['key'],
                     $this->client->get_bucket()
                 );
+                S3MO_Tracker::clear_error($attachment_id);
+
+                // DEBT-01: Delete local files after successful S3 upload.
+                if (get_option('s3mo_delete_local', false)) {
+                    foreach ($files as $file) {
+                        if (file_exists($file['local'])) {
+                            if (! @unlink($file['local'])) {
+                                error_log('CT S3 Offloader: Failed to delete local file ' . $file['local']);
+                            }
+                        }
+                    }
+                }
 
                 return ['status' => 'success', 'files' => count($files)];
             }
@@ -198,6 +210,9 @@ class S3MO_Bulk_Migrator {
                 sleep(pow(2, $attempt - 1));
             }
         }
+
+        // DEBT-03: Write error postmeta on failure.
+        S3MO_Tracker::set_error($attachment_id, $last_error);
 
         return ['status' => 'fail', 'error' => $last_error];
     }
