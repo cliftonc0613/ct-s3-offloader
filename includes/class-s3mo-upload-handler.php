@@ -112,8 +112,24 @@ class S3MO_Upload_Handler {
         if ($success_count === $total) {
             // All files uploaded successfully.
             S3MO_Tracker::mark_as_offloaded($attachment_id, $files[0]['key'], $this->client->get_bucket());
+            S3MO_Tracker::clear_error($attachment_id);
+
+            // DEBT-01: Delete local files after successful S3 upload.
+            if (get_option('s3mo_delete_local', false)) {
+                foreach ($files as $file) {
+                    if (file_exists($file['local'])) {
+                        if (! @unlink($file['local'])) {
+                            error_log('CT S3 Offloader: Failed to delete local file ' . $file['local']);
+                        }
+                    }
+                }
+            }
         } elseif ($success_count > 0) {
             // Partial upload — log but do NOT mark as offloaded.
+            S3MO_Tracker::set_error(
+                $attachment_id,
+                'Partial upload (' . $success_count . '/' . $total . '): ' . implode('; ', $errors)
+            );
             error_log(
                 'CT S3 Offloader: Partial upload for attachment ' . $attachment_id
                 . ' (' . $success_count . '/' . $total . '). Errors: '
@@ -121,6 +137,10 @@ class S3MO_Upload_Handler {
             );
         } else {
             // Complete failure — log but do NOT mark as offloaded.
+            S3MO_Tracker::set_error(
+                $attachment_id,
+                'Upload failed: ' . implode('; ', $errors)
+            );
             error_log(
                 'CT S3 Offloader: Failed to upload attachment ' . $attachment_id
                 . '. Errors: ' . implode('; ', $errors)
