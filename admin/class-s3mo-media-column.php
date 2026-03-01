@@ -46,7 +46,7 @@ class S3MO_Media_Column {
 
         $info = S3MO_Tracker::get_offload_info($post_id);
 
-        $error = get_post_meta($post_id, '_s3mo_error', true);
+        $error = get_post_meta($post_id, S3MO_Tracker::META_ERROR, true);
 
         if (! empty($error)) {
             $this->render_error_status();
