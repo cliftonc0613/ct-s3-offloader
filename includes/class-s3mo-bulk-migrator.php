@@ -259,7 +259,7 @@ class S3MO_Bulk_Migrator {
         $offloaded_args = $total_args;
         $offloaded_args['meta_query'] = [
             [
-                'key'     => '_s3mo_offloaded',
+                'key'     => S3MO_Tracker::META_OFFLOADED,
                 'value'   => '1',
                 'compare' => '=',
             ],

@@ -57,30 +57,26 @@ class S3MO_Upload_Handler {
             return $metadata;
         }
 
-        // Build list of files to upload.
-        $upload_dir = wp_get_upload_dir();
-        $prefix     = get_option('s3mo_path_prefix', 'wp-content/uploads');
+        // Build list of files to upload (shared key-building via Tracker).
+        $base_files = S3MO_Tracker::build_file_list($metadata);
         $mime       = get_post_mime_type($attachment_id);
-        $files      = [];
 
-        // Original file.
-        $files[] = [
-            'local' => $upload_dir['basedir'] . '/' . $metadata['file'],
-            'key'   => $prefix . '/' . $metadata['file'],
-            'mime'  => $mime,
-        ];
-
-        // Thumbnails — file value is FILENAME ONLY, directory from original.
+        // Collect per-thumbnail MIME types in iteration order.
+        $thumb_mimes = [];
         if (! empty($metadata['sizes']) && is_array($metadata['sizes'])) {
-            $subdir = dirname($metadata['file']);
-
             foreach ($metadata['sizes'] as $size_data) {
-                $files[] = [
-                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $size_data['file'],
-                    'key'   => $prefix . '/' . $subdir . '/' . $size_data['file'],
-                    'mime'  => $size_data['mime-type'],
-                ];
+                $thumb_mimes[] = $size_data['mime-type'];
             }
+        }
+
+        // Augment each entry with MIME type (build_file_list returns {local, key} only).
+        $files = [];
+        foreach ($base_files as $i => $entry) {
+            $files[] = [
+                'local' => $entry['local'],
+                'key'   => $entry['key'],
+                'mime'  => $i === 0 ? $mime : ($thumb_mimes[$i - 1] ?? $mime),
+            ];
         }
 
         // Upload each file independently.
