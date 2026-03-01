@@ -3,7 +3,7 @@
 ## Milestones
 
 - v1.0 MVP - Phases 1-6 (shipped 2026-02-28)
-- v1.1 PHP 7.4 Compatibility & Tech Debt - Phases 7-8 (in progress)
+- v1.1 PHP 7.4 Compatibility & Tech Debt - Phases 7-8 (shipped 2026-03-01)
 
 ## Phases
 
@@ -16,7 +16,7 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full phase details.
 
 </details>
 
-### v1.1 PHP 7.4 Compatibility & Tech Debt (In Progress)
+### v1.1 PHP 7.4 Compatibility & Tech Debt (SHIPPED 2026-03-01)
 
 **Milestone Goal:** Make the plugin compatible with PHP 7.4+ hosting environments and resolve all tech debt identified in the v1.0 audit.
 
@@ -25,7 +25,7 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full phase details.
 - Decimal phases (7.1, 7.2): Urgent insertions if needed (marked with INSERTED)
 
 - [x] **Phase 7: PHP 7.4 Compatibility** - Downgrade AWS SDK and ensure all plugin code runs on PHP 7.4 through 8.x
-- [ ] **Phase 8: Tech Debt Resolution** - Fix functional gaps, eliminate code duplication, and clean up spec mismatches
+- [x] **Phase 8: Tech Debt Resolution** - Fix functional gaps, eliminate code duplication, and clean up spec mismatches
 
 ## Phase Details
 
@@ -58,9 +58,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Refactor Tracker (public constants, shared build_file_list), update Stats and Bulk Migrator, remove unused constant
-- [ ] 08-02-PLAN.md — Wire delete-local files, connection status transient, and upload error postmeta
-- [ ] 08-03-PLAN.md — Update CLAUDE.md to reflect resolved tech debt and document CORS handler
+- [x] 08-01-PLAN.md — Refactor Tracker (public constants, shared build_file_list), update Stats and Bulk Migrator, remove unused constant
+- [x] 08-02-PLAN.md — Wire delete-local files, connection status transient, and upload error postmeta
+- [x] 08-03-PLAN.md — Update CLAUDE.md to reflect resolved tech debt and document CORS handler
 
 ## Progress
 
@@ -71,4 +71,4 @@ Phases execute in numeric order: 7 then 8
 |-------|-----------|----------------|--------|-----------|
 | 1-6 | v1.0 | 11/11 | Complete | 2026-02-28 |
 | 7. PHP 7.4 Compatibility | v1.1 | 2/2 | Complete | 2026-03-01 |
-| 8. Tech Debt Resolution | v1.1 | 0/3 | Not started | - |
+| 8. Tech Debt Resolution | v1.1 | 3/3 | Complete | 2026-03-01 |
