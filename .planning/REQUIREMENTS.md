@@ -9,33 +9,33 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Foundation
 
-- [ ] **FOUND-01**: Plugin activates/deactivates cleanly with proper WordPress hooks
-- [ ] **FOUND-02**: AWS SDK bundled without Composer (PHAR or extracted zip with autoloader)
-- [ ] **FOUND-03**: Plugin autoloader loads classes on demand without manual requires
-- [ ] **FOUND-04**: AWS credentials read from wp-config.php constants (not stored in database)
-- [ ] **FOUND-05**: Settings page with fields for S3 bucket, region, CloudFront domain, and S3 path prefix
-- [ ] **FOUND-06**: Connection test button on settings page validates S3 credentials and bucket access
-- [ ] **FOUND-07**: Settings validation rejects invalid bucket names, regions, and empty credentials
+- [x] **FOUND-01**: Plugin activates/deactivates cleanly with proper WordPress hooks
+- [x] **FOUND-02**: AWS SDK bundled without Composer (PHAR or extracted zip with autoloader)
+- [x] **FOUND-03**: Plugin autoloader loads classes on demand without manual requires
+- [x] **FOUND-04**: AWS credentials read from wp-config.php constants (not stored in database)
+- [x] **FOUND-05**: Settings page with fields for S3 bucket, region, CloudFront domain, and S3 path prefix
+- [x] **FOUND-06**: Connection test button on settings page validates S3 credentials and bucket access
+- [x] **FOUND-07**: Settings validation rejects invalid bucket names, regions, and empty credentials
 
 ### Upload
 
-- [ ] **UPLD-01**: New media uploads automatically copied to S3 after WordPress saves locally
-- [ ] **UPLD-02**: All generated thumbnail sizes uploaded to S3 alongside the original
-- [ ] **UPLD-03**: S3 object key stored in attachment postmeta for tracking
-- [ ] **UPLD-04**: Upload uses correct hook (`wp_generate_attachment_metadata`) to avoid duplicate uploads
-- [ ] **UPLD-05**: Failed S3 uploads logged with error details and do not break WordPress media flow
-- [ ] **UPLD-06**: Proper Content-Type headers set on S3 objects based on file MIME type
-- [ ] **UPLD-07**: S3 uploads use ObjectUploader for automatic single/multipart selection
+- [x] **UPLD-01**: New media uploads automatically copied to S3 after WordPress saves locally
+- [x] **UPLD-02**: All generated thumbnail sizes uploaded to S3 alongside the original
+- [x] **UPLD-03**: S3 object key stored in attachment postmeta for tracking
+- [x] **UPLD-04**: Upload uses correct hook (`wp_generate_attachment_metadata`) to avoid duplicate uploads
+- [x] **UPLD-05**: Failed S3 uploads logged with error details and do not break WordPress media flow
+- [x] **UPLD-06**: Proper Content-Type headers set on S3 objects based on file MIME type
+- [x] **UPLD-07**: S3 uploads use ObjectUploader for automatic single/multipart selection
 
 ### URL Rewriting
 
-- [ ] **URL-01**: `wp_get_attachment_url` filter rewrites media URLs to CloudFront domain
-- [ ] **URL-02**: Post/page content filtered to replace local media URLs with CloudFront URLs
-- [ ] **URL-03**: Responsive image srcset URLs rewritten to CloudFront
-- [ ] **URL-04**: Gutenberg block content URLs rewritten to CloudFront
-- [ ] **URL-05**: REST API attachment responses include CloudFront URLs for headless frontend
-- [ ] **URL-06**: URL rewriting is runtime-only — local URLs remain in database as fallback
-- [ ] **URL-07**: Deactivating the plugin restores all URLs to local paths automatically
+- [x] **URL-01**: `wp_get_attachment_url` filter rewrites media URLs to CloudFront domain
+- [x] **URL-02**: Post/page content filtered to replace local media URLs with CloudFront URLs
+- [x] **URL-03**: Responsive image srcset URLs rewritten to CloudFront
+- [x] **URL-04**: Gutenberg block content URLs rewritten to CloudFront
+- [x] **URL-05**: REST API attachment responses include CloudFront URLs for headless frontend
+- [x] **URL-06**: URL rewriting is runtime-only — local URLs remain in database as fallback
+- [x] **URL-07**: Deactivating the plugin restores all URLs to local paths automatically
 
 ### Deletion
 
@@ -57,25 +57,25 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Admin UI
 
-- [ ] **UI-01**: Settings page accessible from WordPress admin menu
-- [ ] **UI-02**: Media Library list view shows S3 status indicator per file (local/S3/error)
-- [ ] **UI-03**: Storage statistics on settings page (files on S3, total size, last sync)
-- [ ] **UI-04**: S3 path prefix configurable (e.g., `wp-content/uploads/` or custom path)
-- [ ] **UI-05**: Admin notices for configuration issues (missing credentials, failed connection)
+- [x] **UI-01**: Settings page accessible from WordPress admin menu
+- [x] **UI-02**: Media Library list view shows S3 status indicator per file (local/S3/error)
+- [x] **UI-03**: Storage statistics on settings page (files on S3, total size, last sync)
+- [x] **UI-04**: S3 path prefix configurable (e.g., `wp-content/uploads/` or custom path)
+- [x] **UI-05**: Admin notices for configuration issues (missing credentials, failed connection)
 
 ### CloudFront
 
-- [ ] **CDN-01**: S3 objects served via CloudFront distribution URL
-- [ ] **CDN-02**: Proper cache-control headers set on S3 objects for CloudFront caching
-- [ ] **CDN-03**: CORS headers configured for cross-origin media requests
-- [ ] **CDN-04**: CloudFront Origin Access Control (OAC) supported (no public bucket ACLs)
+- [x] **CDN-01**: S3 objects served via CloudFront distribution URL
+- [x] **CDN-02**: Proper cache-control headers set on S3 objects for CloudFront caching
+- [x] **CDN-03**: CORS headers configured for cross-origin media requests
+- [x] **CDN-04**: CloudFront Origin Access Control (OAC) supported (no public bucket ACLs)
 
 ### Security
 
-- [ ] **SEC-01**: AWS credentials stored as wp-config.php constants, never in wp_options
-- [ ] **SEC-02**: Settings page protected with `manage_options` capability check
-- [ ] **SEC-03**: All settings form submissions verified with WordPress nonces
-- [ ] **SEC-04**: Plugin data cleaned up on uninstall (postmeta, options, transients)
+- [x] **SEC-01**: AWS credentials stored as wp-config.php constants, never in wp_options
+- [x] **SEC-02**: Settings page protected with `manage_options` capability check
+- [x] **SEC-03**: All settings form submissions verified with WordPress nonces
+- [x] **SEC-04**: Plugin data cleaned up on uninstall (postmeta, options, transients)
 
 ## v2 Requirements
 
@@ -148,10 +148,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIG-07 | Phase 5 | Complete |
 | MIG-08 | Phase 5 | Complete |
 | UI-01 | Phase 1 | Complete |
-| UI-02 | Phase 6 | Pending |
-| UI-03 | Phase 6 | Pending |
-| UI-04 | Phase 6 | Pending |
-| UI-05 | Phase 6 | Pending |
+| UI-02 | Phase 6 | Complete |
+| UI-03 | Phase 6 | Complete |
+| UI-04 | Phase 6 | Complete |
+| UI-05 | Phase 6 | Complete |
 | CDN-01 | Phase 3 | Complete |
 | CDN-02 | Phase 2 | Complete |
 | CDN-03 | Phase 3 | Complete |
@@ -159,7 +159,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-01 | Phase 1 | Complete |
 | SEC-02 | Phase 1 | Complete |
 | SEC-03 | Phase 1 | Complete |
-| SEC-04 | Phase 6 | Pending |
+| SEC-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 46 total
@@ -168,4 +168,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-27*
-*Last updated: 2026-02-28 after Phase 5 completion*
+*Last updated: 2026-02-28 after Phase 6 completion — all v1 requirements complete*
