@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-27)
 
 ## Current Position
 
-Phase: 5 of 6 (Bulk Migration)
-Plan: 2 of 2 complete
-Status: Phase complete
-Last activity: 2026-02-28 — Completed Phase 5 (Bulk Migration)
+Phase: 6 of 6 (Admin UI and Finalization)
+Plan: 1 of 2 complete in phase
+Status: In progress
+Last activity: 2026-02-28 — Completed 06-01-PLAN.md (Media Column and Notices)
 
-Progress: [████████░░] 83%
+Progress: [█████████░] 91%
 
 ## Performance Metrics
 
@@ -32,9 +32,10 @@ Progress: [████████░░] 83%
 | 3 - URL Rewriting | 2/2 | ~4m | ~2m |
 | 4 - Deletion Sync | 1/1 | ~1m 30s | ~1m 30s |
 | 5 - Bulk Migration | 2/2 | ~4m | ~2m |
+| 6 - Admin UI | 1/2 | ~3m | ~3m |
 
 **Recent Trend:**
-- Last 5 plans: 03-01, 03-02, 04-01, 05-01, 05-02
+- Last 5 plans: 04-01, 05-01, 05-02, 06-01
 - Trend: Consistent execution speed across all phases
 
 *Updated after each plan completion*
@@ -62,6 +63,9 @@ Recent decisions affecting current work:
 - Delete handler outside is_admin() for REST API and WP-CLI deletion support
 - Failed S3 deletions logged but never thrown (DEL-04)
 - Tracker cleared AFTER S3 deletions to preserve key access
+- Media column always visible regardless of credential status
+- Admin notices centralized in dedicated class replacing inline anonymous function
+- Single admin.css shared between settings page and media column
 
 ### Pending Todos
 
@@ -76,5 +80,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed Phase 5 (Bulk Migration)
-Resume: Plan Phase 6 with /gsd:discuss-phase 6
+Stopped at: Completed 06-01-PLAN.md (Media Column and Notices)
+Resume: Execute 06-02-PLAN.md
