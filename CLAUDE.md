@@ -107,7 +107,7 @@ Key `offload` flags: `--dry-run`, `--force`, `--batch-size=<n>`, `--sleep=<n>`, 
 
 ## Development Notes
 
-- **PHP 8.1+ required** — uses typed properties, named arguments, constructor property promotion
+- **PHP 7.4+ required** — compatible with PHP 7.4 through 8.x; AWS SDK v3.337.3 bundled for PHP 7.4 support
 - **No build pipeline** — no `package.json`, `composer.json`, or test suite
 - **No Composer** — autoloading is custom via `spl_autoload_register`
 - **Assets** — `assets/css/admin.css` and `assets/js/admin.js` (jQuery-based, no build step)
