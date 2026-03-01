@@ -39,11 +39,11 @@ See `.planning/milestones/v1.0-ROADMAP.md` for full phase details.
   3. AWS SDK v3.337.3 is bundled and the S3 client connects successfully
   4. Uploading a new media file offloads it to S3 and serves it via CloudFront (same as v1.0 behavior)
   5. WP-CLI `wp ct-s3 offload` and `wp ct-s3 status` commands work with the downgraded SDK
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — Download AWS SDK v3.337.3 and add runtime version pinning
+- [ ] 07-02-PLAN.md — Update PHP version references in documentation and plugin header
 
 ### Phase 8: Tech Debt Resolution
 **Goal**: All dead code paths become functional, duplicated logic is consolidated, and spec mismatches are resolved
