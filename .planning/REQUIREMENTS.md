@@ -50,23 +50,23 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PHP-01 | TBD | Pending |
-| PHP-02 | TBD | Pending |
-| PHP-03 | TBD | Pending |
-| PHP-04 | TBD | Pending |
-| DEBT-01 | TBD | Pending |
-| DEBT-02 | TBD | Pending |
-| DEBT-03 | TBD | Pending |
-| DEBT-04 | TBD | Pending |
-| DEBT-05 | TBD | Pending |
-| DEBT-06 | TBD | Pending |
-| DEBT-07 | TBD | Pending |
+| PHP-01 | Phase 7 | Pending |
+| PHP-02 | Phase 7 | Pending |
+| PHP-03 | Phase 7 | Pending |
+| PHP-04 | Phase 7 | Pending |
+| DEBT-01 | Phase 8 | Pending |
+| DEBT-02 | Phase 8 | Pending |
+| DEBT-03 | Phase 8 | Pending |
+| DEBT-04 | Phase 8 | Pending |
+| DEBT-05 | Phase 8 | Pending |
+| DEBT-06 | Phase 8 | Pending |
+| DEBT-07 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 11 total
-- Mapped to phases: 0
-- Unmapped: 11
+- Mapped to phases: 11
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-01*
-*Last updated: 2026-03-01 after initial definition*
+*Last updated: 2026-03-01 after roadmap creation*
