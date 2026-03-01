@@ -1,0 +1,84 @@
+/**
+ * CT S3 Offloader — Admin Styles
+ *
+ * Styles for the Media Library offload status column, detail popups,
+ * admin notices, and settings page credential display.
+ */
+
+/* ─── Status Column ────────────────────────────────────────────────── */
+
+.column-s3mo_status {
+    width: 100px;
+}
+
+.s3mo-status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.s3mo-status-s3 {
+    background-color: #00a32a;
+}
+
+.s3mo-status-local {
+    background-color: #dba617;
+}
+
+.s3mo-status-error {
+    background-color: #d63638;
+}
+
+/* ─── Status Toggle Button ─────────────────────────────────────────── */
+
+.s3mo-status-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: inherit;
+    color: inherit;
+    line-height: inherit;
+}
+
+.s3mo-status-toggle:hover {
+    background-color: #f0f0f1;
+}
+
+/* ─── Detail Popup ─────────────────────────────────────────────────── */
+
+.s3mo-details {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.6;
+    word-break: break-all;
+}
+
+.s3mo-details.is-visible {
+    display: block;
+}
+
+.s3mo-details strong {
+    display: inline-block;
+    min-width: 70px;
+}
+
+/* ─── Settings Page Credentials ────────────────────────────────────── */
+
+.s3mo-not-defined {
+    color: #d63638;
+    font-weight: 600;
+}
+
+.s3mo-credential-value {
+    font-family: monospace;
+}
