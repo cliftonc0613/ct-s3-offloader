@@ -107,11 +107,11 @@ Plans:
   2. Settings page displays storage statistics: total files on S3, total size, and last sync timestamp
   3. Admin sees warning notices when plugin is misconfigured (missing credentials, failed connection test)
   4. Uninstalling the plugin removes all postmeta, options, and transients it created
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: Media Library status column and admin notices
-- [ ] 06-02: Storage statistics and uninstall cleanup
+- [ ] 06-01-PLAN.md — Media Library status column with offload indicators and centralized admin notices
+- [ ] 06-02-PLAN.md — Storage statistics dashboard on settings page and comprehensive uninstall cleanup
 
 ## Progress
 
