@@ -47,11 +47,11 @@ class S3MO_Bulk_Migrator {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'compare' => 'NOT EXISTS',
                 ],
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'value'   => '1',
                     'compare' => '!=',
                 ],
@@ -94,11 +94,11 @@ class S3MO_Bulk_Migrator {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'compare' => 'NOT EXISTS',
                 ],
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'value'   => '1',
                     'compare' => '!=',
                 ],
@@ -127,33 +127,11 @@ class S3MO_Bulk_Migrator {
     public function build_file_key_list(int $attachment_id): array {
         $metadata = wp_get_attachment_metadata($attachment_id);
 
-        if (empty($metadata['file'])) {
+        if (! is_array($metadata) || empty($metadata['file'])) {
             return [];
         }
 
-        $upload_dir = wp_get_upload_dir();
-        $prefix     = get_option('s3mo_path_prefix', 'wp-content/uploads');
-        $files      = [];
-
-        // Original file.
-        $files[] = [
-            'local' => $upload_dir['basedir'] . '/' . $metadata['file'],
-            'key'   => $prefix . '/' . $metadata['file'],
-        ];
-
-        // Thumbnails — filename only, directory derived from original.
-        if (! empty($metadata['sizes']) && is_array($metadata['sizes'])) {
-            $subdir = dirname($metadata['file']);
-
-            foreach ($metadata['sizes'] as $size_data) {
-                $files[] = [
-                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $size_data['file'],
-                    'key'   => $prefix . '/' . $subdir . '/' . $size_data['file'],
-                ];
-            }
-        }
-
-        return $files;
+        return S3MO_Tracker::build_file_list($metadata);
     }
 
     /**
@@ -363,7 +341,7 @@ class S3MO_Bulk_Migrator {
             'order'          => 'ASC',
             'meta_query'     => [
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'value'   => '1',
                     'compare' => '=',
                 ],

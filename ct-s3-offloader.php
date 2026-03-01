@@ -18,7 +18,6 @@ define('S3MO_VERSION', '1.1.0');
 define('S3MO_EXPECTED_AWS_SDK_VERSION', '3.337.3');
 define('S3MO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('S3MO_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('S3MO_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 /* ─── Autoloader ────────────────────────────────────────────────────── */
 
