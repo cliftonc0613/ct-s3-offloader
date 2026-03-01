@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Media files upload to S3 and serve from CloudFront transparently
-**Current focus:** v1.1 Phase 8 - Tech Debt Resolution
+**Current focus:** v1.1 Phase 8 - Tech Debt Resolution (complete)
 
 ## Current Position
 
 Phase: 8 of 10 (Tech Debt Resolution)
-Plan: 1 of 3 complete
-Status: In progress
-Last activity: 2026-03-01 — Completed 08-01-PLAN.md
+Plan: 3 of 3 complete
+Status: Phase complete
+Last activity: 2026-03-01 — Completed 08-03-PLAN.md
 
-Progress: [█████████...........] 45% (v1.1: 3/5 plans — 07-01, 07-02, 08-01)
+Progress: [██████████..........] 50% (v1.1: 5/5 phase 7-8 plans — 07-01, 07-02, 08-01, 08-02, 08-03)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14 (11 v1.0 + 3 v1.1)
+- Total plans completed: 16 (11 v1.0 + 5 v1.1)
 - Average duration: ~2m 30s
-- Total execution time: ~35 minutes
+- Total execution time: ~40 minutes
 
 ## Accumulated Context
 
@@ -37,6 +37,8 @@ Recent decisions affecting current work:
 - 07-02: Planning artifacts (.planning/) left unchanged as historical records
 - 08-01: All Tracker meta key constants made public for cross-class reference
 - 08-01: build_file_list added as static method on Tracker for shared key-building
+- 08-03: CORS handler documented as intentional feature for headless setups
+- 08-03: All 5 original tech debt items resolved and removed from CLAUDE.md
 
 ### Pending Todos
 
@@ -49,5 +51,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 08-01-PLAN.md
-Resume: Execute 08-02-PLAN.md next
+Stopped at: Completed 08-03-PLAN.md (Phase 8 complete)
+Resume: Execute Phase 9 (Settings Migration) next
