@@ -55,12 +55,12 @@ Plans:
   3. When an upload to S3 fails, the Media Library shows a red error badge on that attachment
   4. S3 key paths are built by a single shared method -- Upload Handler and Bulk Migrator both call `S3MO_Tracker` for key generation
   5. `S3MO_Stats` references `S3MO_Tracker` constants for all meta key lookups, and the unused `S3MO_PLUGIN_BASENAME` constant is removed
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
+- [ ] 08-01-PLAN.md — Refactor Tracker (public constants, shared build_file_list), update Stats and Bulk Migrator, remove unused constant
+- [ ] 08-02-PLAN.md — Wire delete-local files, connection status transient, and upload error postmeta
+- [ ] 08-03-PLAN.md — Update CLAUDE.md to reflect resolved tech debt and document CORS handler
 
 ## Progress
 
