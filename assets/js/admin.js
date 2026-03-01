@@ -35,4 +35,11 @@
             }
         });
     });
+
+    // Toggle S3 detail popup in Media Library list view.
+    $(document).on('click', '.s3mo-status-toggle', function(e) {
+        e.preventDefault();
+        var $details = $(this).siblings('.s3mo-details');
+        $details.toggleClass('is-visible');
+    });
 })(jQuery);

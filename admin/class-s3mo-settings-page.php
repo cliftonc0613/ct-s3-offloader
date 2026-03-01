@@ -117,12 +117,12 @@ class S3MO_Settings_Page {
             return;
         }
 
-        wp_enqueue_style('wp-admin');
-
-        wp_add_inline_style('wp-admin', '
-            .s3mo-not-defined { color: #d63638; font-weight: 600; }
-            .s3mo-credential-value { font-family: monospace; }
-        ');
+        wp_enqueue_style(
+            's3mo-admin',
+            S3MO_PLUGIN_URL . 'assets/css/admin.css',
+            [],
+            S3MO_VERSION
+        );
 
         wp_enqueue_script(
             's3mo-admin',

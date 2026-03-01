@@ -81,14 +81,13 @@ add_action('plugins_loaded', function (): void {
         }
     }
 
-    if (! empty($missing)) {
-        add_action('admin_notices', function () use ($missing): void {
-            $list = implode(', ', array_map(function ($c) {
-                return '<code>' . esc_html($c) . '</code>';
-            }, $missing));
-            echo '<div class="notice notice-warning"><p><strong>CT S3 Offloader:</strong> '
-               . 'Missing credential constants in <code>wp-config.php</code>: ' . $list . '</p></div>';
-        });
+    /* Admin notices and media column — always active in admin. */
+    if (is_admin()) {
+        $notices = new S3MO_Admin_Notices();
+        $notices->register_hooks();
+
+        $media_column = new S3MO_Media_Column();
+        $media_column->register_hooks();
     }
 
     if (empty($missing)) {
