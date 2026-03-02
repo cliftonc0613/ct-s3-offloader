@@ -1,5 +1,30 @@
 # Project Milestones: CT S3 Media Offloader
 
+## v1.1 PHP 7.4 Compatibility & Tech Debt (Shipped: 2026-03-01)
+
+**Delivered:** PHP 7.4 compatibility via AWS SDK downgrade and resolution of all 7 tech debt items from v1.0 audit
+
+**Phases completed:** 7-8 (5 plans total)
+
+**Key accomplishments:**
+- AWS SDK downgraded to v3.337.3 with runtime version pinning for PHP 7.4 compatibility
+- S3MO_Tracker elevated to shared utility with public constants, build_file_list, and error tracking
+- Delete-local files setting made functional in both Upload Handler and Bulk Migrator
+- Connection test writes persistent transient enabling failure notice banners
+- Upload error postmeta lifecycle complete — write on failure, clear on success, display in Media Library
+
+**Stats:**
+- 8 files modified
+- 2,848 lines of PHP (up from 2,755)
+- 2 phases, 5 plans, 24 commits
+- 1 day (2026-03-01)
+
+**Git range:** `1a5ad22` (docs: create phase plan) → `d0343e8` (docs: v1.1 milestone audit)
+
+**What's next:** Configure CloudFront distribution and deploy to production
+
+---
+
 ## v1.0 MVP (Shipped: 2026-02-28)
 
 **Delivered:** WordPress plugin that transparently offloads media uploads to S3 and serves them via CloudFront CDN with WP-CLI bulk migration tools

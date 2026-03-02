@@ -47,11 +47,11 @@ class S3MO_Bulk_Migrator {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'compare' => 'NOT EXISTS',
                 ],
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'value'   => '1',
                     'compare' => '!=',
                 ],
@@ -94,11 +94,11 @@ class S3MO_Bulk_Migrator {
             $args['meta_query'] = [
                 'relation' => 'OR',
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'compare' => 'NOT EXISTS',
                 ],
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'value'   => '1',
                     'compare' => '!=',
                 ],
@@ -127,33 +127,11 @@ class S3MO_Bulk_Migrator {
     public function build_file_key_list(int $attachment_id): array {
         $metadata = wp_get_attachment_metadata($attachment_id);
 
-        if (empty($metadata['file'])) {
+        if (! is_array($metadata) || empty($metadata['file'])) {
             return [];
         }
 
-        $upload_dir = wp_get_upload_dir();
-        $prefix     = get_option('s3mo_path_prefix', 'wp-content/uploads');
-        $files      = [];
-
-        // Original file.
-        $files[] = [
-            'local' => $upload_dir['basedir'] . '/' . $metadata['file'],
-            'key'   => $prefix . '/' . $metadata['file'],
-        ];
-
-        // Thumbnails — filename only, directory derived from original.
-        if (! empty($metadata['sizes']) && is_array($metadata['sizes'])) {
-            $subdir = dirname($metadata['file']);
-
-            foreach ($metadata['sizes'] as $size_data) {
-                $files[] = [
-                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $size_data['file'],
-                    'key'   => $prefix . '/' . $subdir . '/' . $size_data['file'],
-                ];
-            }
-        }
-
-        return $files;
+        return S3MO_Tracker::build_file_list($metadata);
     }
 
     /**
@@ -211,6 +189,18 @@ class S3MO_Bulk_Migrator {
                     $files[0]['key'],
                     $this->client->get_bucket()
                 );
+                S3MO_Tracker::clear_error($attachment_id);
+
+                // DEBT-01: Delete local files after successful S3 upload.
+                if (get_option('s3mo_delete_local', false)) {
+                    foreach ($files as $file) {
+                        if (file_exists($file['local'])) {
+                            if (! @unlink($file['local'])) {
+                                error_log('CT S3 Offloader: Failed to delete local file ' . $file['local']);
+                            }
+                        }
+                    }
+                }
 
                 return ['status' => 'success', 'files' => count($files)];
             }
@@ -220,6 +210,9 @@ class S3MO_Bulk_Migrator {
                 sleep(pow(2, $attempt - 1));
             }
         }
+
+        // DEBT-03: Write error postmeta on failure.
+        S3MO_Tracker::set_error($attachment_id, $last_error);
 
         return ['status' => 'fail', 'error' => $last_error];
     }
@@ -266,7 +259,7 @@ class S3MO_Bulk_Migrator {
         $offloaded_args = $total_args;
         $offloaded_args['meta_query'] = [
             [
-                'key'     => '_s3mo_offloaded',
+                'key'     => S3MO_Tracker::META_OFFLOADED,
                 'value'   => '1',
                 'compare' => '=',
             ],
@@ -363,7 +356,7 @@ class S3MO_Bulk_Migrator {
             'order'          => 'ASC',
             'meta_query'     => [
                 [
-                    'key'     => '_s3mo_offloaded',
+                    'key'     => S3MO_Tracker::META_OFFLOADED,
                     'value'   => '1',
                     'compare' => '=',
                 ],

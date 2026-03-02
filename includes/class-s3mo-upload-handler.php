@@ -57,30 +57,26 @@ class S3MO_Upload_Handler {
             return $metadata;
         }
 
-        // Build list of files to upload.
-        $upload_dir = wp_get_upload_dir();
-        $prefix     = get_option('s3mo_path_prefix', 'wp-content/uploads');
+        // Build list of files to upload (shared key-building via Tracker).
+        $base_files = S3MO_Tracker::build_file_list($metadata);
         $mime       = get_post_mime_type($attachment_id);
-        $files      = [];
 
-        // Original file.
-        $files[] = [
-            'local' => $upload_dir['basedir'] . '/' . $metadata['file'],
-            'key'   => $prefix . '/' . $metadata['file'],
-            'mime'  => $mime,
-        ];
-
-        // Thumbnails — file value is FILENAME ONLY, directory from original.
+        // Collect per-thumbnail MIME types in iteration order.
+        $thumb_mimes = [];
         if (! empty($metadata['sizes']) && is_array($metadata['sizes'])) {
-            $subdir = dirname($metadata['file']);
-
             foreach ($metadata['sizes'] as $size_data) {
-                $files[] = [
-                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $size_data['file'],
-                    'key'   => $prefix . '/' . $subdir . '/' . $size_data['file'],
-                    'mime'  => $size_data['mime-type'],
-                ];
+                $thumb_mimes[] = $size_data['mime-type'];
             }
+        }
+
+        // Augment each entry with MIME type (build_file_list returns {local, key} only).
+        $files = [];
+        foreach ($base_files as $i => $entry) {
+            $files[] = [
+                'local' => $entry['local'],
+                'key'   => $entry['key'],
+                'mime'  => $i === 0 ? $mime : ($thumb_mimes[$i - 1] ?? $mime),
+            ];
         }
 
         // Upload each file independently.
@@ -112,8 +108,24 @@ class S3MO_Upload_Handler {
         if ($success_count === $total) {
             // All files uploaded successfully.
             S3MO_Tracker::mark_as_offloaded($attachment_id, $files[0]['key'], $this->client->get_bucket());
+            S3MO_Tracker::clear_error($attachment_id);
+
+            // DEBT-01: Delete local files after successful S3 upload.
+            if (get_option('s3mo_delete_local', false)) {
+                foreach ($files as $file) {
+                    if (file_exists($file['local'])) {
+                        if (! @unlink($file['local'])) {
+                            error_log('CT S3 Offloader: Failed to delete local file ' . $file['local']);
+                        }
+                    }
+                }
+            }
         } elseif ($success_count > 0) {
             // Partial upload — log but do NOT mark as offloaded.
+            S3MO_Tracker::set_error(
+                $attachment_id,
+                'Partial upload (' . $success_count . '/' . $total . '): ' . implode('; ', $errors)
+            );
             error_log(
                 'CT S3 Offloader: Partial upload for attachment ' . $attachment_id
                 . ' (' . $success_count . '/' . $total . '). Errors: '
@@ -121,6 +133,10 @@ class S3MO_Upload_Handler {
             );
         } else {
             // Complete failure — log but do NOT mark as offloaded.
+            S3MO_Tracker::set_error(
+                $attachment_id,
+                'Upload failed: ' . implode('; ', $errors)
+            );
             error_log(
                 'CT S3 Offloader: Failed to upload attachment ' . $attachment_id
                 . '. Errors: ' . implode('; ', $errors)

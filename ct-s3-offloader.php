@@ -3,9 +3,9 @@
  * Plugin Name: CT S3 Offloader
  * Plugin URI: https://ctwebdesignshop.com
  * Description: Offload WordPress media to Amazon S3 with CloudFront CDN.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: CT Web Design Shop Inc.
- * Requires PHP: 8.1
+ * Requires PHP: 7.4
  * License: GPL-2.0+
  * Text Domain: ct-s3-offloader
  */
@@ -14,10 +14,10 @@ defined('ABSPATH') || exit;
 
 /* ─── Constants ─────────────────────────────────────────────────────── */
 
-define('S3MO_VERSION', '1.0.0');
+define('S3MO_VERSION', '1.1.0');
+define('S3MO_EXPECTED_AWS_SDK_VERSION', '3.337.3');
 define('S3MO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('S3MO_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('S3MO_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 /* ─── Autoloader ────────────────────────────────────────────────────── */
 
@@ -56,6 +56,17 @@ if (! class_exists('Aws\Sdk')) {
     }
 
     require_once $sdk_autoloader;
+}
+
+// Verify SDK version matches expected
+if (defined('Aws\Sdk::VERSION') && version_compare(\Aws\Sdk::VERSION, S3MO_EXPECTED_AWS_SDK_VERSION, '!=')) {
+    add_action('admin_notices', function (): void {
+        $expected = S3MO_EXPECTED_AWS_SDK_VERSION;
+        $actual = \Aws\Sdk::VERSION;
+        echo '<div class="notice notice-warning"><p><strong>CT S3 Offloader:</strong> '
+           . "Expected AWS SDK v{$expected} but found v{$actual}. "
+           . 'The plugin may not work correctly with this SDK version.</p></div>';
+    });
 }
 
 /* ─── WP-CLI Commands ──────────────────────────────────────────────── */

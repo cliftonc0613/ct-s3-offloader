@@ -104,6 +104,7 @@ delete_post_meta_by_key('_s3mo_offloaded');
 delete_post_meta_by_key('_s3mo_key');
 delete_post_meta_by_key('_s3mo_bucket');
 delete_post_meta_by_key('_s3mo_offloaded_at');
+delete_post_meta_by_key('_s3mo_error');
 
 /* ─── Remove Plugin Options ────────────────────────────────────────── */
 

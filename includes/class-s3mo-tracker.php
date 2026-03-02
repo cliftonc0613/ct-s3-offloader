@@ -2,11 +2,15 @@
 /**
  * S3MO_Tracker — Attachment offload tracking via WordPress postmeta.
  *
- * Persists S3 offload state for media attachments using four meta keys:
+ * Persists S3 offload state for media attachments using five meta keys:
  *   _s3mo_offloaded    — boolean flag (1 or 0)
  *   _s3mo_key          — the S3 object key for the original file
  *   _s3mo_bucket       — bucket name at time of upload
  *   _s3mo_offloaded_at — ISO 8601 timestamp of when offload occurred
+ *   _s3mo_error        — error message from last failed operation
+ *
+ * Also provides shared utility methods for building file lists from
+ * attachment metadata, used by both Upload_Handler and Bulk_Migrator.
  *
  * All methods are static — no instance state is needed.
  *
@@ -18,16 +22,19 @@ defined('ABSPATH') || exit;
 class S3MO_Tracker {
 
     /** @var string Meta key for offloaded boolean flag. */
-    private const META_OFFLOADED = '_s3mo_offloaded';
+    public const META_OFFLOADED = '_s3mo_offloaded';
 
     /** @var string Meta key for S3 object key. */
-    private const META_KEY = '_s3mo_key';
+    public const META_KEY = '_s3mo_key';
 
     /** @var string Meta key for bucket name. */
-    private const META_BUCKET = '_s3mo_bucket';
+    public const META_BUCKET = '_s3mo_bucket';
 
     /** @var string Meta key for offload timestamp. */
-    private const META_OFFLOADED_AT = '_s3mo_offloaded_at';
+    public const META_OFFLOADED_AT = '_s3mo_offloaded_at';
+
+    /** @var string Meta key for error message. */
+    public const META_ERROR = '_s3mo_error';
 
     /**
      * Mark an attachment as offloaded to S3.
@@ -97,5 +104,66 @@ class S3MO_Tracker {
         delete_post_meta($attachment_id, self::META_KEY);
         delete_post_meta($attachment_id, self::META_BUCKET);
         delete_post_meta($attachment_id, self::META_OFFLOADED_AT);
+        delete_post_meta($attachment_id, self::META_ERROR);
+    }
+
+    /**
+     * Build the list of local file paths and S3 keys from attachment metadata.
+     *
+     * Returns entries for the original file and all generated thumbnails.
+     * Shared utility used by S3MO_Upload_Handler and S3MO_Bulk_Migrator to
+     * eliminate duplicated key-building logic.
+     *
+     * @param array $metadata Attachment metadata from wp_get_attachment_metadata().
+     *
+     * @return array<int, array{local: string, key: string}> File list, empty if no file in metadata.
+     */
+    public static function build_file_list(array $metadata): array {
+        if (empty($metadata['file'])) {
+            return [];
+        }
+
+        $prefix     = get_option('s3mo_path_prefix', 'wp-content/uploads');
+        $upload_dir = wp_get_upload_dir();
+        $files      = [];
+
+        // Original file.
+        $files[] = [
+            'local' => $upload_dir['basedir'] . '/' . $metadata['file'],
+            'key'   => $prefix . '/' . $metadata['file'],
+        ];
+
+        // Thumbnails — filename only, directory derived from original.
+        if (! empty($metadata['sizes']) && is_array($metadata['sizes'])) {
+            $subdir = dirname($metadata['file']);
+
+            foreach ($metadata['sizes'] as $size_data) {
+                $files[] = [
+                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $size_data['file'],
+                    'key'   => $prefix . '/' . $subdir . '/' . $size_data['file'],
+                ];
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * Store an error message for an attachment.
+     *
+     * @param int    $attachment_id WordPress attachment post ID.
+     * @param string $message       Error message to store.
+     */
+    public static function set_error(int $attachment_id, string $message): void {
+        update_post_meta($attachment_id, self::META_ERROR, $message);
+    }
+
+    /**
+     * Clear any stored error for an attachment.
+     *
+     * @param int $attachment_id WordPress attachment post ID.
+     */
+    public static function clear_error(int $attachment_id): void {
+        delete_post_meta($attachment_id, self::META_ERROR);
     }
 }
