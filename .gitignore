@@ -1,3 +1,6 @@
+# OS files
+.DS_Store
+
 # AWS SDK (large; download as build step)
 aws-sdk/*
 !aws-sdk/README.md

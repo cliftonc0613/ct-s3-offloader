@@ -26,10 +26,18 @@ A custom WordPress plugin that automatically offloads media uploads to Amazon S3
 - ✓ CloudFront CDN integration with proper cache headers and OAC support — v1.0
 - ✓ Error handling and logging for failed uploads/deletions — v1.0
 - ✓ Security: credentials in wp-config.php, nonce verification, capability checks — v1.0
+- ✓ PHP 7.4 compatibility with AWS SDK v3.337.3 (last PHP 7.4 compatible version) — v1.1
+- ✓ Runtime SDK version pinning with admin warning on mismatch — v1.1
+- ✓ Delete-local files setting functional in Upload Handler and Bulk Migrator — v1.1
+- ✓ Connection test writes persistent transient for failure notice — v1.1
+- ✓ Upload error postmeta lifecycle (write/clear/display) — v1.1
+- ✓ Shared key-building via S3MO_Tracker::build_file_list — v1.1
+- ✓ S3MO_Stats uses Tracker constants, unused S3MO_PLUGIN_BASENAME removed — v1.1
+- ✓ CORS handler documented as intentional for headless setups — v1.1
 
 ### Active
 
-(None — next milestone not yet defined)
+(No active requirements — next milestone not yet defined)
 
 ### Out of Scope
 
@@ -42,17 +50,18 @@ A custom WordPress plugin that automatically offloads media uploads to Amazon S3
 
 ## Context
 
-Shipped v1.0 with 2,755 LOC PHP across 13 classes.
-Tech stack: WordPress plugin (PHP), AWS SDK v3 (bundled), S3, CloudFront.
+Shipped v1.1 with 2,848 LOC PHP across 13 classes.
+Tech stack: WordPress plugin (PHP), AWS SDK v3.337.3 (bundled), S3, CloudFront.
 Plugin deployed on Local by Flywheel for Clemson Sports Media site.
 AWS infrastructure (S3 bucket, IAM user, policies) already configured.
 CloudFront distribution setup pending for production deployment.
 
-Known tech debt from v1.0 audit: 7 items (no blockers). See `.planning/milestones/v1.0-ROADMAP.md` for details.
+All v1.0 tech debt resolved in v1.1. No known tech debt remaining.
 
 ## Constraints
 
 - **No Composer**: AWS SDK bundled directly (extracted zip)
+- **PHP 7.4+**: Must work on PHP 7.4 through 8.x — AWS SDK v3.337.3 bundled for compatibility
 - **Local by Flywheel**: Development environment with specific PHP/MySQL paths
 - **WordPress coding standards**: Follow WP PHP conventions, hook patterns, admin API
 - **Large migration**: Must handle 1000+ files with batching, progress tracking, resume on failure
@@ -77,6 +86,10 @@ Known tech debt from v1.0 audit: 7 items (no blockers). See `.planning/milestone
 | Explicit CORS origin allowlist | Security over convenience; no wildcard origins | ✓ Good |
 | delete_post_meta_by_key() for uninstall | Proper WordPress cache invalidation vs raw SQL | ✓ Good |
 | Optional S3 object deletion on uninstall | User choice to preserve or clean S3 data | ✓ Good |
+| Downgrade to PHP 7.4 | Broader hosting compatibility; AWS SDK v3.337.3 supports 7.4+ | ✓ Good |
+| Public Tracker constants | Cross-class reference eliminates hardcoded meta key strings | ✓ Good |
+| Shared build_file_list on Tracker | Eliminates key-building duplication between Upload Handler and Bulk Migrator | ✓ Good |
+| CORS as intentional feature | Defensive measure for headless setups, not dead code | ✓ Good |
 
 ---
-*Last updated: 2026-02-28 after v1.0 milestone*
+*Last updated: 2026-03-01 after v1.1 milestone completion*

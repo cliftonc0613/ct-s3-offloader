@@ -14,7 +14,7 @@ Offload your WordPress media library to Amazon S3 and serve files through CloudF
 ## Requirements
 
 - **WordPress** 5.3+
-- **PHP** 8.1+
+- **PHP** 7.4+
 - **AWS S3 bucket** with an IAM user that has `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:ListBucket`, and `s3:HeadBucket` permissions
 - **CloudFront distribution** (optional but recommended) configured with Origin Access Control (OAC) pointing to your S3 bucket
 - **WP-CLI** (optional) for bulk migration commands
