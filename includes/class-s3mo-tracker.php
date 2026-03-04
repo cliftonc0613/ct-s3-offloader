@@ -138,9 +138,10 @@ class S3MO_Tracker {
             $subdir = dirname($metadata['file']);
 
             foreach ($metadata['sizes'] as $size_data) {
+                $thumb_file = basename($size_data['file']);
                 $files[] = [
-                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $size_data['file'],
-                    'key'   => $prefix . '/' . $subdir . '/' . $size_data['file'],
+                    'local' => $upload_dir['basedir'] . '/' . $subdir . '/' . $thumb_file,
+                    'key'   => $prefix . '/' . $subdir . '/' . $thumb_file,
                 ];
             }
         }
@@ -155,7 +156,7 @@ class S3MO_Tracker {
      * @param string $message       Error message to store.
      */
     public static function set_error(int $attachment_id, string $message): void {
-        update_post_meta($attachment_id, self::META_ERROR, $message);
+        update_post_meta($attachment_id, self::META_ERROR, sanitize_text_field($message));
     }
 
     /**

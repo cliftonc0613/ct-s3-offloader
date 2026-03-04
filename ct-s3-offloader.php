@@ -28,6 +28,11 @@ spl_autoload_register(function (string $class): void {
 
     $file = 'class-' . str_replace('_', '-', strtolower($class)) . '.php';
 
+    // Reject filenames with path traversal characters.
+    if (preg_match('/\.\./', $file) || strpos($file, '/') !== false) {
+        return;
+    }
+
     $directories = [
         S3MO_PLUGIN_DIR . 'includes/',
         S3MO_PLUGIN_DIR . 'admin/',

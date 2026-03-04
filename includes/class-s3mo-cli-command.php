@@ -384,7 +384,7 @@ class S3MO_CLI_Command extends WP_CLI_Command {
 
         if ($failed > 0) {
             WP_CLI::warning(sprintf(
-                '%d file(s) failed. Check log: wp-content/ct-s3-migration.log',
+                '%d file(s) failed. Check log: wp-content/uploads/ct-s3-offloader/ct-s3-migration.log',
                 $failed
             ));
         }
@@ -402,10 +402,23 @@ class S3MO_CLI_Command extends WP_CLI_Command {
      * @param string $message Log message.
      */
     private function log_to_file(string $message): void {
-        $log_path = WP_CONTENT_DIR . '/ct-s3-migration.log';
-        $line     = sprintf('[%s] %s' . PHP_EOL, gmdate('Y-m-d H:i:s'), $message);
+        $log_dir  = WP_CONTENT_DIR . '/uploads/ct-s3-offloader';
+        $log_path = $log_dir . '/ct-s3-migration.log';
+
+        if (! is_dir($log_dir)) {
+            wp_mkdir_p($log_dir);
+            file_put_contents($log_dir . '/.htaccess', "Deny from all\n");
+            file_put_contents($log_dir . '/index.php', "<?php\n// Silence is golden.\n");
+        }
+
+        $line    = sprintf('[%s] %s' . PHP_EOL, gmdate('Y-m-d H:i:s'), $message);
+        $is_new  = ! file_exists($log_path);
 
         file_put_contents($log_path, $line, FILE_APPEND | LOCK_EX);
+
+        if ($is_new) {
+            chmod($log_path, 0600);
+        }
     }
 
     /**

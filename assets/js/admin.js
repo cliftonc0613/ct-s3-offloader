@@ -23,12 +23,14 @@
                     : (response.data && response.data.message ? response.data.message : 'Unknown error');
                 $result
                     .addClass('notice ' + (isSuccess ? 'notice-success' : 'notice-error'))
-                    .html('<p>' + message + '</p>');
+                    .empty()
+                    .append($('<p></p>').text(message));
             },
             error: function() {
                 $result
                     .addClass('notice notice-error')
-                    .html('<p>Request failed. Check your network connection.</p>');
+                    .empty()
+                    .append($('<p></p>').text('Request failed. Check your network connection.'));
             },
             complete: function() {
                 $btn.prop('disabled', false).text('Test Connection');

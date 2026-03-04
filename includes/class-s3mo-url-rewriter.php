@@ -296,22 +296,21 @@ class S3MO_URL_Rewriter {
             return;
         }
 
-        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+        $origin = isset($_SERVER['HTTP_ORIGIN']) ? esc_url_raw($_SERVER['HTTP_ORIGIN']) : '';
 
         if (empty($origin)) {
             return;
         }
 
         // Build allowed origins list.
-        $allowed = [
-            get_site_url(),
-            'http://localhost:3000',
-            'http://localhost:3001',
-        ];
+        $allowed = [get_site_url()];
 
         if (defined('S3MO_CDN_URL') && S3MO_CDN_URL) {
             $allowed[] = rtrim(S3MO_CDN_URL, '/');
         }
+
+        /** Filter the CORS allowed origins list. Use for development origins like localhost:3000. */
+        $allowed = apply_filters('s3mo_cors_allowed_origins', $allowed);
 
         if (! in_array($origin, $allowed, true)) {
             return;

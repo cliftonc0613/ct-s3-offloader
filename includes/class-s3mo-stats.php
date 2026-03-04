@@ -70,11 +70,13 @@ class S3MO_Stats {
         }
 
         /* Most recent offload timestamp. */
-        $meta_key_at    = S3MO_Tracker::META_OFFLOADED_AT;
         $last_offloaded = (string) $wpdb->get_var(
-            "SELECT meta_value FROM {$wpdb->postmeta}
-             WHERE meta_key = '{$meta_key_at}'
-             ORDER BY meta_value DESC LIMIT 1"
+            $wpdb->prepare(
+                "SELECT meta_value FROM {$wpdb->postmeta}
+                 WHERE meta_key = %s
+                 ORDER BY meta_value DESC LIMIT 1",
+                S3MO_Tracker::META_OFFLOADED_AT
+            )
         );
 
         return [
