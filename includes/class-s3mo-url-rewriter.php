@@ -309,7 +309,12 @@ class S3MO_URL_Rewriter {
             $allowed[] = rtrim(S3MO_CDN_URL, '/');
         }
 
-        /** Filter the CORS allowed origins list. Use for development origins like localhost:3000. */
+        // Allow a separate frontend origin (e.g. Next.js, Astro) defined in wp-config.php.
+        if (defined('S3MO_FRONTEND_URL') && S3MO_FRONTEND_URL) {
+            $allowed[] = rtrim(S3MO_FRONTEND_URL, '/');
+        }
+
+        /** Filter the CORS allowed origins list for additional origins. */
         $allowed = apply_filters('s3mo_cors_allowed_origins', $allowed);
 
         if (! in_array($origin, $allowed, true)) {
