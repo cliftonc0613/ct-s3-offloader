@@ -3,7 +3,7 @@
  * Plugin Name: CT S3 Offloader
  * Plugin URI: https://ctwebdesignshop.com
  * Description: Offload WordPress media to Amazon S3 with CloudFront CDN.
- * Version: 1.1.0
+ * Version: 1.3
  * Author: CT Web Design Shop Inc.
  * Requires PHP: 7.4
  * License: GPL-2.0+
@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
 
 /* ─── Constants ─────────────────────────────────────────────────────── */
 
-define('S3MO_VERSION', '1.1.0');
+define('S3MO_VERSION', '1.3');
 define('S3MO_EXPECTED_AWS_SDK_VERSION', '3.337.3');
 define('S3MO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('S3MO_PLUGIN_URL', plugin_dir_url(__FILE__));
