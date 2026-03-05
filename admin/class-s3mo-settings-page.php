@@ -78,6 +78,9 @@ class S3MO_Settings_Page {
     public function sanitize_path_prefix($value): string {
         $value = sanitize_text_field((string) $value);
         $value = trim($value, '/');
+        $value = str_replace(['../', '..\\', '..'], '', $value);
+        $value = preg_replace('#/+#', '/', $value);
+        $value = preg_replace('#[^a-zA-Z0-9/_\-.]#', '', $value);
 
         if (empty($value)) {
             add_settings_error(
@@ -107,8 +110,12 @@ class S3MO_Settings_Page {
 
         $result = $this->client->test_connection();
 
-        // DEBT-02: Write connection status transient for Admin Notices to read.
-        set_transient('s3mo_connection_status', $result);
+        // Write connection status transient for Admin Notices to read.
+        set_transient('s3mo_connection_status', [
+            'success' => $result['success'],
+            'message' => sanitize_text_field($result['message']),
+            'code'    => isset($result['code']) ? sanitize_text_field($result['code']) : '',
+        ]);
 
         if ($result['success']) {
             wp_send_json_success($result);

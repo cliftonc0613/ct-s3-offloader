@@ -72,7 +72,7 @@ if (get_option('s3mo_delete_s3_on_uninstall')) {
                         $base_dir = dirname($s3_key);
                         foreach ($metadata['sizes'] as $size_data) {
                             if (! empty($size_data['file'])) {
-                                $objects[] = ['Key' => $base_dir . '/' . $size_data['file']];
+                                $objects[] = ['Key' => $base_dir . '/' . basename($size_data['file'])];
                             }
                         }
                     }
@@ -117,9 +117,15 @@ delete_option('s3mo_delete_s3_on_uninstall');
 delete_transient('s3mo_connection_status');
 delete_transient('s3mo_stats_cache');
 
-/* ─── Remove Log File ──────────────────────────────────────────────── */
+/* ─── Remove Log File & Directory ──────────────────────────────────── */
 
-$log_file = WP_CONTENT_DIR . '/ct-s3-migration.log';
-if (file_exists($log_file)) {
-    @unlink($log_file);
+$log_dir = WP_CONTENT_DIR . '/uploads/ct-s3-offloader';
+if (is_dir($log_dir)) {
+    array_map('unlink', glob($log_dir . '/*'));
+    rmdir($log_dir);
+}
+// Legacy log location cleanup.
+$legacy_log = WP_CONTENT_DIR . '/ct-s3-migration.log';
+if (file_exists($legacy_log)) {
+    @unlink($legacy_log);
 }

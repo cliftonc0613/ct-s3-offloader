@@ -109,6 +109,17 @@ Key `offload` flags: `--dry-run`, `--force`, `--batch-size=<n>`, `--sleep=<n>`, 
 - **Assets** — `assets/css/admin.css` and `assets/js/admin.js` (jQuery-based, no build step)
 - **Plugin lifecycle** — activation sets default options; deactivation clears transients; `uninstall.php` does full cleanup (postmeta, options, transients, log file, optionally S3 objects)
 
+## IMPORTANT: Development Workflow Rules
+
+**These rules are MANDATORY and must be followed for every task. No exceptions.**
+
+1. **PLAN FIRST** — Think through the problem, read the codebase for relevant files, and write a plan to `tasks/todo.md` with a checklist of todo items. Check in with the user for plan approval before starting work. NEVER start coding without an approved plan.
+2. **WORK THE PLAN** — Complete todo items one at a time, marking each as done. Give a high-level explanation of each change.
+3. **SIMPLICITY ABOVE ALL** — Every task and code change MUST be as simple as possible. Changes MUST impact as little code as possible. Avoid massive or complex changes. Simplicity prevents bugs. If a change feels big, break it down smaller.
+4. **NO LAZINESS. EVER.** — NEVER take shortcuts. NEVER apply temporary fixes. ALWAYS find the root cause and fix it properly. You are a senior developer. Act like one.
+5. **MINIMAL BLAST RADIUS** — Changes MUST only impact code directly relevant to the task. Touch NOTHING else. The goal is ZERO introduced bugs. If it's not broken and not part of the task, don't touch it.
+6. **REVIEW AT THE END** — Add a review section to `tasks/todo.md` summarizing all changes made and any relevant information.
+
 ## Planning Artifacts
 
 The `.planning/` directory contains AI-assisted development docs: `PROJECT.md` (requirements/decisions), `STATE.md` (session continuity), phase plans in `phases/`, and milestone audits in `milestones/`. These are reference-only and not part of the plugin distribution.

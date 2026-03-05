@@ -59,7 +59,7 @@ class S3MO_Client {
                 '403'                   => 'Forbidden. Check IAM user permissions for this bucket.',
             ];
 
-            $message = $messages[$code] ?? $e->getAwsErrorMessage() ?? $e->getMessage();
+            $message = $messages[$code] ?? wp_strip_all_tags($e->getAwsErrorMessage() ?? $e->getMessage());
 
             return [
                 'success' => false,
@@ -149,7 +149,7 @@ class S3MO_Client {
             return [
                 'success' => false,
                 'key'     => $key,
-                'error'   => $e->getAwsErrorMessage() ?? $e->getMessage(),
+                'error'   => wp_strip_all_tags($e->getAwsErrorMessage() ?? $e->getMessage()),
             ];
         } finally {
             fclose($body);
@@ -178,7 +178,7 @@ class S3MO_Client {
             return [
                 'success' => false,
                 'key'     => $key,
-                'error'   => $e->getAwsErrorMessage() ?? $e->getMessage(),
+                'error'   => wp_strip_all_tags($e->getAwsErrorMessage() ?? $e->getMessage()),
             ];
         }
     }

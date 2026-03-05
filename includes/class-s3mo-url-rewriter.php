@@ -296,22 +296,26 @@ class S3MO_URL_Rewriter {
             return;
         }
 
-        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+        $origin = isset($_SERVER['HTTP_ORIGIN']) ? esc_url_raw($_SERVER['HTTP_ORIGIN']) : '';
 
         if (empty($origin)) {
             return;
         }
 
         // Build allowed origins list.
-        $allowed = [
-            get_site_url(),
-            'http://localhost:3000',
-            'http://localhost:3001',
-        ];
+        $allowed = [get_site_url()];
 
         if (defined('S3MO_CDN_URL') && S3MO_CDN_URL) {
             $allowed[] = rtrim(S3MO_CDN_URL, '/');
         }
+
+        // Allow a separate frontend origin (e.g. Next.js, Astro) defined in wp-config.php.
+        if (defined('S3MO_FRONTEND_URL') && S3MO_FRONTEND_URL) {
+            $allowed[] = rtrim(S3MO_FRONTEND_URL, '/');
+        }
+
+        /** Filter the CORS allowed origins list for additional origins. */
+        $allowed = apply_filters('s3mo_cors_allowed_origins', $allowed);
 
         if (! in_array($origin, $allowed, true)) {
             return;
