@@ -42,6 +42,9 @@ define('S3MO_SECRET', 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
 
 // Optional — if not set, files are served directly from S3
 define('S3MO_CDN_URL', 'https://d111111abcdef8.cloudfront.net');
+
+// Optional — your frontend app URL for CORS (headless/decoupled setups only)
+define('S3MO_FRONTEND_URL', 'http://localhost:3000');
 ```
 
 ### What Happens Without Credentials
@@ -181,7 +184,7 @@ wp ct-s3 offload --force
 
 - Failed uploads are retried **twice** with exponential backoff (1 second, then 2 seconds) before being marked as failed.
 - The migration continues to the next file after a failure.
-- Failed files are logged to `wp-content/ct-s3-migration.log` with timestamps.
+- Failed files are logged to `wp-content/uploads/ct-s3-offloader/ct-s3-migration.log` with timestamps.
 - If PHP runs out of memory, a shutdown handler logs the error. Reduce `--batch-size` and try again.
 - The command is **idempotent** — running it again skips files that were already uploaded.
 
@@ -311,7 +314,7 @@ When you delete the plugin through the WordPress admin:
 
 1. All offload tracking metadata is removed from the database.
 2. All plugin options and transients are deleted.
-3. The migration log file (`wp-content/ct-s3-migration.log`) is deleted.
+3. The migration log file (`wp-content/uploads/ct-s3-offloader/ct-s3-migration.log`) is deleted.
 4. If the **Delete S3 Files on Uninstall** setting was checked, all offloaded files are deleted from S3 in batches (originals + thumbnails).
 
 Your local media files are never deleted by the plugin.

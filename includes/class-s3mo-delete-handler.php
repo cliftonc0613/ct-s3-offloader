@@ -93,7 +93,7 @@ class S3MO_Delete_Handler {
             $s3_dir = dirname($s3_key);
 
             foreach ($metadata['sizes'] as $size_data) {
-                $keys[] = $s3_dir . '/' . $size_data['file'];
+                $keys[] = $s3_dir . '/' . basename($size_data['file']);
             }
         }
 
